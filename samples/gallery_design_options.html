@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery Design Options - Skip & Refresh Controls</title>
+  <style>
+    :root {
+      --bg-dark: #121212;
+      --card-bg: #1e1e1e;
+      --input-bg: #2d2d2d;
+      --border: #333;
+      --text: #e0e0e0;
+      --primary: #0d6efd;
+      --success: #28a745;
+      --danger: #dc3545;
+      --red: #ff6b6b;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .option-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .option-title {
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+
+    .option-description {
+      color: #999;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Base Gallery Styles (from current design) */
+    .gallery-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 60vh;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .gallery-group {
+      border: 1px solid #1f2233;
+      border-radius: 12px;
+      padding: 0.5rem 0.75rem 0.5rem;
+      background: #111321;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      margin-bottom: 0.65rem;
+    }
+
+    .gallery-group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .gallery-group-header h5 {
+      margin: 0;
+      font-size: 1rem;
+      color: #fff;
+    }
+
+    .gallery-item-id {
+      color: #9aa4d3;
+      font-size: 0.8rem;
+      display: inline-block;
+      margin-top: 0.15rem;
+    }
+
+    .variant-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .gallery-item {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.5rem;
+      border-radius: 8px;
+      background: var(--input-bg);
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      width: 200px;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .gallery-item.selected {
+      border-color: #00ffff;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.6), 0 0 30px rgba(0, 255, 255, 0.4);
+    }
+
+    .gallery-thumbnail {
+      width: 100%;
+      height: 150px;
+      min-height: 150px;
+      object-fit: cover;
+      border-radius: 4px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      display: block;
+    }
+
+    .gallery-info {
+      margin-top: 0.5rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    .gallery-filename {
+      font-size: 0.75em;
+      color: var(--text);
+      word-break: break-word;
+      font-weight: 500;
+    }
+
+    /* OPTION 1: Checkbox and Refresh in Header (Left Side) */
+    .option1-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-right: auto;
+    }
+
+    .skip-checkbox-option1 {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: var(--red);
+    }
+
+    .refresh-btn-option1 {
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      padding: 0.4rem 0.6rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: all 0.2s ease;
+    }
+
+    .refresh-btn-option1:hover {
+      background: #333;
+      border-color: var(--primary);
+    }
+
+    .refresh-btn-option1:active {
+      transform: scale(0.95);
+    }
+
+    /* OPTION 2: Checkbox Left, Refresh Below Item ID */
+    .option2-controls {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .option2-left-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding-top: 0.25rem;
+    }
+
+    .skip-checkbox-option2 {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      accent-color: var(--red);
+      border-radius: 4px;
+    }
+
+    .refresh-btn-option2 {
+      background: transparent;
+      border: 1px solid var(--red);
+      border-radius: 50%;
+      color: var(--red);
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      font-size: 1rem;
+    }
+
+    .refresh-btn-option2:hover {
+      background: var(--red);
+      color: white;
+      transform: rotate(180deg);
+    }
+
+    .option2-content {
+      flex: 1;
+    }
+
+    /* OPTION 3: Compact Inline Controls */
+    .option3-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      padding: 0.25rem 0;
+    }
+
+    .skip-checkbox-option3 {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--red);
+    }
+
+    .skip-label-option3 {
+      font-size: 0.8rem;
+      color: var(--red);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .refresh-btn-option3 {
+      margin-left: auto;
+      background: transparent;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .refresh-btn-option3:hover {
+      background: rgba(13, 110, 253, 0.2);
+      transform: rotate(90deg);
+    }
+
+    /* OPTION 4: Floating Controls Over Item */
+    .option4-group {
+      position: relative;
+    }
+
+    .option4-controls {
+      position: absolute;
+      top: 0.5rem;
+      left: 0.5rem;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .skip-checkbox-option4 {
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      accent-color: var(--red);
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 4px;
+      padding: 2px;
+    }
+
+    .refresh-btn-option4 {
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid var(--primary);
+      border-radius: 4px;
+      color: var(--primary);
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .refresh-btn-option4:hover {
+      background: rgba(13, 110, 253, 0.3);
+      transform: scale(1.1);
+    }
+
+    /* OPTION 5: Sidebar Controls */
+    .option5-group {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .option5-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding: 0.5rem;
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      border-radius: 8px;
+      min-width: 80px;
+      align-items: center;
+    }
+
+    .skip-checkbox-option5 {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      accent-color: var(--red);
+    }
+
+    .skip-label-option5 {
+      font-size: 0.7rem;
+      color: var(--red);
+      text-align: center;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+    }
+
+    .refresh-btn-option5 {
+      background: var(--primary);
+      border: none;
+      border-radius: 6px;
+      color: white;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .refresh-btn-option5:hover {
+      background: #0b5ed7;
+      transform: rotate(180deg);
+    }
+
+    .option5-content {
+      flex: 1;
+    }
+
+    /* Skipped state */
+    .gallery-group.skipped {
+      opacity: 0.5;
+      background: rgba(255, 107, 107, 0.1);
+      border-color: rgba(255, 107, 107, 0.5);
+    }
+
+    .gallery-group.skipped .gallery-group-header h5 {
+      text-decoration: line-through;
+      color: #999;
+    }
+
+    /* Loading state for refresh */
+    .refresh-btn.loading {
+      opacity: 0.6;
+      cursor: not-allowed;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* New images indicator */
+    .new-images-badge {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: var(--success);
+      color: white;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Gallery Design Options: Skip & Refresh Controls</h1>
+
+    <!-- OPTION 1: Checkbox and Refresh in Header (Left Side) -->
+    <div class="option-section">
+      <div class="option-title">Option 1: Header Controls (Left Side)</div>
+      <div class="option-description">
+        Checkbox and refresh button placed in the gallery group header, aligned to the left. Clean and accessible.
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-group">
+          <div class="gallery-group-header">
+            <div class="option1-controls">
+              <input type="checkbox" class="skip-checkbox-option1" id="skip1" title="Skip this item">
+              <button class="refresh-btn-option1" title="Refresh images for this item">
+                <span>🔄</span> Refresh
+              </button>
+            </div>
+            <h5>Item ABC123</h5>
+          </div>
+          <div class="gallery-item-id">Short Description: Blue Running Shoes</div>
+          <div class="variant-row">
+            <div class="gallery-item selected">
+              <img src="https://via.placeholder.com/200x150/4a90e2/ffffff?text=Image+1" class="gallery-thumbnail" alt="Image 1">
+              <div class="gallery-info">
+                <div class="gallery-filename">image1.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="https://via.placeholder.com/200x150/50c878/ffffff?text=Image+2" class="gallery-thumbnail" alt="Image 2">
+              <div class="gallery-info">
+                <div class="gallery-filename">image2.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="https://via.placeholder.com/200x150/e74c3c/ffffff?text=Image+3" class="gallery-thumbnail" alt="Image 3">
+              <div class="gallery-info">
+                <div class="gallery-filename">image3.jpg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION 2: Checkbox Left, Refresh Below Item ID -->
+    <div class="option-section">
+      <div class="option-title">Option 2: Sidebar Controls (Left of Content)</div>
+      <div class="option-description">
+        Checkbox and refresh icon in a vertical sidebar on the left. Refresh icon is circular and rotates on hover.
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-group">
+          <div class="option2-controls">
+            <div class="option2-left-controls">
+              <input type="checkbox" class="skip-checkbox-option2" id="skip2" title="Skip this item">
+              <button class="refresh-btn-option2" title="Refresh images">🔄</button>
+            </div>
+            <div class="option2-content">
+              <div class="gallery-group-header">
+                <h5>Item DEF456</h5>
+              </div>
+              <div class="gallery-item-id">Short Description: Red Basketball</div>
+              <div class="variant-row">
+                <div class="gallery-item selected">
+                  <img src="https://via.placeholder.com/200x150/9b59b6/ffffff?text=Image+1" class="gallery-thumbnail" alt="Image 1">
+                  <div class="gallery-info">
+                    <div class="gallery-filename">image1.jpg</div>
+                  </div>
+                </div>
+                <div class="gallery-item">
+                  <img src="https://via.placeholder.com/200x150/f39c12/ffffff?text=Image+2" class="gallery-thumbnail" alt="Image 2">
+                  <div class="gallery-info">
+                    <div class="gallery-filename">image2.jpg</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION 3: Compact Inline Controls -->
+    <div class="option-section">
+      <div class="option-title">Option 3: Compact Inline Controls</div>
+      <div class="option-description">
+        Minimal design with checkbox and label on left, refresh icon on right. Space-efficient.
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-group">
+          <div class="option3-controls">
+            <input type="checkbox" class="skip-checkbox-option3" id="skip3">
+            <label for="skip3" class="skip-label-option3">Skip Item</label>
+            <button class="refresh-btn-option3" title="Refresh images">🔄</button>
+          </div>
+          <div class="gallery-group-header">
+            <h5>Item GHI789</h5>
+          </div>
+          <div class="gallery-item-id">Short Description: Green Tennis Racket</div>
+          <div class="variant-row">
+            <div class="gallery-item selected">
+              <img src="https://via.placeholder.com/200x150/16a085/ffffff?text=Image+1" class="gallery-thumbnail" alt="Image 1">
+              <div class="gallery-info">
+                <div class="gallery-filename">image1.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="https://via.placeholder.com/200x150/e67e22/ffffff?text=Image+2" class="gallery-thumbnail" alt="Image 2">
+              <div class="gallery-info">
+                <div class="gallery-filename">image2.jpg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION 4: Floating Controls Over Item -->
+    <div class="option-section">
+      <div class="option-title">Option 4: Floating Overlay Controls</div>
+      <div class="option-description">
+        Controls float over the top-left corner of the gallery group. Modern overlay style.
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-group option4-group">
+          <div class="option4-controls">
+            <input type="checkbox" class="skip-checkbox-option4" id="skip4" title="Skip this item">
+            <button class="refresh-btn-option4" title="Refresh images">🔄</button>
+          </div>
+          <div class="gallery-group-header">
+            <h5>Item JKL012</h5>
+          </div>
+          <div class="gallery-item-id">Short Description: Yellow Soccer Ball</div>
+          <div class="variant-row">
+            <div class="gallery-item selected">
+              <img src="https://via.placeholder.com/200x150/f1c40f/ffffff?text=Image+1" class="gallery-thumbnail" alt="Image 1">
+              <div class="gallery-info">
+                <div class="gallery-filename">image1.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="https://via.placeholder.com/200x150/3498db/ffffff?text=Image+2" class="gallery-thumbnail" alt="Image 2">
+              <div class="gallery-info">
+                <div class="gallery-filename">image2.jpg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION 5: Sidebar Controls -->
+    <div class="option-section">
+      <div class="option-title">Option 5: Vertical Sidebar with Label</div>
+      <div class="option-description">
+        Dedicated red-tinted sidebar on the left with vertical "SKIP" label. Refresh button is prominent.
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-group">
+          <div class="option5-group">
+            <div class="option5-sidebar">
+              <input type="checkbox" class="skip-checkbox-option5" id="skip5" title="Skip this item">
+              <label for="skip5" class="skip-label-option5">SKIP</label>
+              <button class="refresh-btn-option5" title="Refresh images">🔄</button>
+            </div>
+            <div class="option5-content">
+              <div class="gallery-group-header">
+                <h5>Item MNO345</h5>
+              </div>
+              <div class="gallery-item-id">Short Description: Purple Yoga Mat</div>
+              <div class="variant-row">
+                <div class="gallery-item selected">
+                  <img src="https://via.placeholder.com/200x150/8e44ad/ffffff?text=Image+1" class="gallery-thumbnail" alt="Image 1">
+                  <div class="gallery-info">
+                    <div class="gallery-filename">image1.jpg</div>
+                  </div>
+                </div>
+                <div class="gallery-item">
+                  <img src="https://via.placeholder.com/200x150/27ae60/ffffff?text=Image+2" class="gallery-thumbnail" alt="Image 2">
+                  <div class="gallery-info">
+                    <div class="gallery-filename">image2.jpg</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SKIPPED STATE EXAMPLE -->
+    <div class="option-section">
+      <div class="option-title">Skipped State Example (Option 1 with skipped styling)</div>
+      <div class="option-description">
+        When an item is skipped, the entire group is dimmed and the title is struck through.
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-group skipped">
+          <div class="gallery-group-header">
+            <div class="option1-controls">
+              <input type="checkbox" class="skip-checkbox-option1" id="skip6" checked title="Skip this item">
+              <button class="refresh-btn-option1" title="Refresh images">
+                <span>🔄</span> Refresh
+              </button>
+            </div>
+            <h5>Item PQR678 (Skipped)</h5>
+          </div>
+          <div class="gallery-item-id">Short Description: Orange Water Bottle</div>
+          <div class="variant-row">
+            <div class="gallery-item">
+              <img src="https://via.placeholder.com/200x150/e67e22/ffffff?text=Image+1" class="gallery-thumbnail" alt="Image 1">
+              <div class="gallery-info">
+                <div class="gallery-filename">image1.jpg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REFRESHED IMAGES EXAMPLE -->
+    <div class="option-section">
+      <div class="option-title">Refreshed Images Example (Option 1)</div>
+      <div class="option-description">
+        New images from refresh appear to the right. A "NEW" badge indicates recently added images.
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-group">
+          <div class="gallery-group-header">
+            <div class="option1-controls">
+              <input type="checkbox" class="skip-checkbox-option1" id="skip7" title="Skip this item">
+              <button class="refresh-btn-option1" title="Refresh images">
+                <span>🔄</span> Refresh
+              </button>
+            </div>
+            <h5>Item STU901</h5>
+          </div>
+          <div class="gallery-item-id">Short Description: Black Backpack</div>
+          <div class="variant-row">
+            <div class="gallery-item selected">
+              <img src="https://via.placeholder.com/200x150/34495e/ffffff?text=Original+1" class="gallery-thumbnail" alt="Image 1">
+              <div class="gallery-info">
+                <div class="gallery-filename">image1.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="https://via.placeholder.com/200x150/34495e/ffffff?text=Original+2" class="gallery-thumbnail" alt="Image 2">
+              <div class="gallery-info">
+                <div class="gallery-filename">image2.jpg</div>
+              </div>
+            </div>
+            <!-- New images from refresh -->
+            <div class="gallery-item" style="position: relative;">
+              <span class="new-images-badge">NEW</span>
+              <img src="https://via.placeholder.com/200x150/27ae60/ffffff?text=New+1" class="gallery-thumbnail" alt="New Image 1">
+              <div class="gallery-info">
+                <div class="gallery-filename">new_image1.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item" style="position: relative;">
+              <span class="new-images-badge">NEW</span>
+              <img src="https://via.placeholder.com/200x150/27ae60/ffffff?text=New+2" class="gallery-thumbnail" alt="New Image 2">
+              <div class="gallery-info">
+                <div class="gallery-filename">new_image2.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item" style="position: relative;">
+              <span class="new-images-badge">NEW</span>
+              <img src="https://via.placeholder.com/200x150/27ae60/ffffff?text=New+3" class="gallery-thumbnail" alt="New Image 3">
+              <div class="gallery-info">
+                <div class="gallery-filename">new_image3.jpg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Demo interactivity
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        const group = this.closest('.gallery-group');
+        if (this.checked) {
+          group.classList.add('skipped');
+        } else {
+          group.classList.remove('skipped');
+        }
+      });
+    });
+
+    document.querySelectorAll('.refresh-btn-option1, .refresh-btn-option2, .refresh-btn-option3, .refresh-btn-option4, .refresh-btn-option5').forEach(btn => {
+      btn.addEventListener('click', function() {
+        this.classList.add('loading');
+        setTimeout(() => {
+          this.classList.remove('loading');
+          alert('Refresh clicked! (Demo - would fetch 3 new images)');
+        }, 1500);
+      });
+    });
+  </script>
+</body>
+</html>
+
+

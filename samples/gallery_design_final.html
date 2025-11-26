@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery Design - Final Option</title>
+  <style>
+    :root {
+      --bg-dark: #121212;
+      --card-bg: #1e1e1e;
+      --input-bg: #2d2d2d;
+      --border: #333;
+      --text: #e0e0e0;
+      --primary: #0d6efd;
+      --success: #28a745;
+      --danger: #dc3545;
+      --red: #ff6b6b;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .option-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .option-title {
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+
+    .option-description {
+      color: #999;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Base Gallery Styles (from current design) */
+    .gallery-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 60vh;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .gallery-group {
+      border: 1px solid #1f2233;
+      border-radius: 12px;
+      padding: 0.5rem 0.75rem 0.5rem;
+      background: #111321;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      margin-bottom: 0.65rem;
+    }
+
+    .gallery-group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .gallery-group-header h5 {
+      margin: 0;
+      font-size: 1rem;
+      color: #fff;
+      margin-right: auto;
+    }
+
+    .gallery-item-id {
+      color: #9aa4d3;
+      font-size: 0.8rem;
+      display: inline-block;
+      margin-top: 0.15rem;
+    }
+
+    .variant-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .gallery-item {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.5rem;
+      border-radius: 8px;
+      background: var(--input-bg);
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      width: 200px;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .gallery-item.selected {
+      border-color: #00ffff;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.6), 0 0 30px rgba(0, 255, 255, 0.4);
+    }
+
+    .gallery-thumbnail {
+      width: 100%;
+      height: 150px;
+      min-height: 150px;
+      object-fit: cover;
+      border-radius: 4px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      display: block;
+    }
+
+    .gallery-info {
+      margin-top: 0.5rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    .gallery-filename {
+      font-size: 0.75em;
+      color: var(--text);
+      word-break: break-word;
+      font-weight: 500;
+    }
+
+    /* FINAL OPTION: Header Controls with Item Name on Left */
+    .final-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-left: auto;
+    }
+
+    .skip-checkbox-final {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: var(--red);
+      filter: hue-rotate(0deg) saturate(1.2);
+    }
+
+    .refresh-btn-final {
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      padding: 0.4rem 0.6rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: all 0.2s ease;
+    }
+
+    .refresh-btn-final:hover {
+      background: #333;
+      border-color: var(--primary);
+    }
+
+    .refresh-btn-final:active {
+      transform: scale(0.95);
+    }
+
+    /* Skipped state */
+    .gallery-group.skipped {
+      opacity: 0.5;
+      background: rgba(255, 107, 107, 0.1);
+      border-color: rgba(255, 107, 107, 0.5);
+    }
+
+    .gallery-group.skipped .gallery-group-header h5 {
+      text-decoration: line-through;
+      color: #999;
+    }
+
+    /* Loading state for refresh */
+    .refresh-btn-final.loading {
+      opacity: 0.6;
+      cursor: not-allowed;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* New images indicator */
+    .new-images-badge {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: var(--success);
+      color: white;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-weight: bold;
+      z-index: 5;
+    }
+
+    /* Visual separator for new images */
+    .new-images-separator {
+      width: 2px;
+      background: var(--success);
+      margin: 0 0.5rem;
+      align-self: stretch;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Gallery Design - Final Option</h1>
+
+    <!-- Normal State Example -->
+    <div class="option-section">
+      <div class="option-title">Normal State - Item Name on Left, Controls on Right</div>
+      <div class="option-description">
+        Item name stays on the left side. Red checkbox and "Add New Images" button are on the right side of the header.
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-group">
+          <div class="gallery-group-header">
+            <h5>Item ABC123</h5>
+            <div class="final-controls">
+              <input type="checkbox" class="skip-checkbox-final" id="skip1" title="Skip this item">
+              <button class="refresh-btn-final" title="Add new images for this item">
+                <span>🔄</span> Add New Images
+              </button>
+            </div>
+          </div>
+          <div class="gallery-item-id">Short Description: Blue Running Shoes</div>
+          <div class="variant-row">
+            <div class="gallery-item selected">
+              <img src="https://via.placeholder.com/200x150/4a90e2/ffffff?text=Image+1" class="gallery-thumbnail" alt="Image 1">
+              <div class="gallery-info">
+                <div class="gallery-filename">image1.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="https://via.placeholder.com/200x150/50c878/ffffff?text=Image+2" class="gallery-thumbnail" alt="Image 2">
+              <div class="gallery-info">
+                <div class="gallery-filename">image2.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="https://via.placeholder.com/200x150/e74c3c/ffffff?text=Image+3" class="gallery-thumbnail" alt="Image 3">
+              <div class="gallery-info">
+                <div class="gallery-filename">image3.jpg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gallery-group">
+          <div class="gallery-group-header">
+            <h5>Item DEF456</h5>
+            <div class="final-controls">
+              <input type="checkbox" class="skip-checkbox-final" id="skip2" title="Skip this item">
+              <button class="refresh-btn-final" title="Add new images for this item">
+                <span>🔄</span> Add New Images
+              </button>
+            </div>
+          </div>
+          <div class="gallery-item-id">Short Description: Red Basketball</div>
+          <div class="variant-row">
+            <div class="gallery-item selected">
+              <img src="https://via.placeholder.com/200x150/9b59b6/ffffff?text=Image+1" class="gallery-thumbnail" alt="Image 1">
+              <div class="gallery-info">
+                <div class="gallery-filename">image1.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="https://via.placeholder.com/200x150/f39c12/ffffff?text=Image+2" class="gallery-thumbnail" alt="Image 2">
+              <div class="gallery-info">
+                <div class="gallery-filename">image2.jpg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skipped State Example -->
+    <div class="option-section">
+      <div class="option-title">Skipped State Example</div>
+      <div class="option-description">
+        When an item is skipped, the entire group is dimmed, the title is struck through, and the checkbox is checked.
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-group skipped">
+          <div class="gallery-group-header">
+            <h5>Item GHI789 (Skipped)</h5>
+            <div class="final-controls">
+              <input type="checkbox" class="skip-checkbox-final" id="skip3" checked title="Skip this item">
+              <button class="refresh-btn-final" title="Add new images for this item">
+                <span>🔄</span> Add New Images
+              </button>
+            </div>
+          </div>
+          <div class="gallery-item-id">Short Description: Green Tennis Racket</div>
+          <div class="variant-row">
+            <div class="gallery-item">
+              <img src="https://via.placeholder.com/200x150/16a085/ffffff?text=Image+1" class="gallery-thumbnail" alt="Image 1">
+              <div class="gallery-info">
+                <div class="gallery-filename">image1.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="https://via.placeholder.com/200x150/e67e22/ffffff?text=Image+2" class="gallery-thumbnail" alt="Image 2">
+              <div class="gallery-info">
+                <div class="gallery-filename">image2.jpg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Refreshed Images Example -->
+    <div class="option-section">
+      <div class="option-title">Refreshed Images Example with "NEW" Badge</div>
+      <div class="option-description">
+        After clicking "Add New Images", 3 new images appear to the right of existing images. Each new image has a green "NEW" badge in the top-right corner.
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-group">
+          <div class="gallery-group-header">
+            <h5>Item JKL012</h5>
+            <div class="final-controls">
+              <input type="checkbox" class="skip-checkbox-final" id="skip4" title="Skip this item">
+              <button class="refresh-btn-final" title="Add new images for this item">
+                <span>🔄</span> Add New Images
+              </button>
+            </div>
+          </div>
+          <div class="gallery-item-id">Short Description: Yellow Soccer Ball</div>
+          <div class="variant-row">
+            <!-- Original images -->
+            <div class="gallery-item selected">
+              <img src="https://via.placeholder.com/200x150/f1c40f/ffffff?text=Original+1" class="gallery-thumbnail" alt="Image 1">
+              <div class="gallery-info">
+                <div class="gallery-filename">image1.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="https://via.placeholder.com/200x150/3498db/ffffff?text=Original+2" class="gallery-thumbnail" alt="Image 2">
+              <div class="gallery-info">
+                <div class="gallery-filename">image2.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="https://via.placeholder.com/200x150/e74c3c/ffffff?text=Original+3" class="gallery-thumbnail" alt="Image 3">
+              <div class="gallery-info">
+                <div class="gallery-filename">image3.jpg</div>
+              </div>
+            </div>
+            
+            <!-- Visual separator (optional) -->
+            <div class="new-images-separator"></div>
+            
+            <!-- New images from refresh -->
+            <div class="gallery-item" style="position: relative;">
+              <span class="new-images-badge">NEW</span>
+              <img src="https://via.placeholder.com/200x150/27ae60/ffffff?text=New+1" class="gallery-thumbnail" alt="New Image 1">
+              <div class="gallery-info">
+                <div class="gallery-filename">new_image1.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item" style="position: relative;">
+              <span class="new-images-badge">NEW</span>
+              <img src="https://via.placeholder.com/200x150/27ae60/ffffff?text=New+2" class="gallery-thumbnail" alt="New Image 2">
+              <div class="gallery-info">
+                <div class="gallery-filename">new_image2.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item" style="position: relative;">
+              <span class="new-images-badge">NEW</span>
+              <img src="https://via.placeholder.com/200x150/27ae60/ffffff?text=New+3" class="gallery-thumbnail" alt="New Image 3">
+              <div class="gallery-info">
+                <div class="gallery-filename">new_image3.jpg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Multiple Items Example -->
+    <div class="option-section">
+      <div class="option-title">Multiple Items - Mixed States</div>
+      <div class="option-description">
+        Example showing multiple items with different states: normal, skipped, and with refreshed images.
+      </div>
+      <div class="gallery-grid">
+        <!-- Normal item -->
+        <div class="gallery-group">
+          <div class="gallery-group-header">
+            <h5>Item MNO345</h5>
+            <div class="final-controls">
+              <input type="checkbox" class="skip-checkbox-final" id="skip5" title="Skip this item">
+              <button class="refresh-btn-final" title="Add new images for this item">
+                <span>🔄</span> Add New Images
+              </button>
+            </div>
+          </div>
+          <div class="gallery-item-id">Short Description: Purple Yoga Mat</div>
+          <div class="variant-row">
+            <div class="gallery-item selected">
+              <img src="https://via.placeholder.com/200x150/8e44ad/ffffff?text=Image+1" class="gallery-thumbnail" alt="Image 1">
+              <div class="gallery-info">
+                <div class="gallery-filename">image1.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="https://via.placeholder.com/200x150/27ae60/ffffff?text=Image+2" class="gallery-thumbnail" alt="Image 2">
+              <div class="gallery-info">
+                <div class="gallery-filename">image2.jpg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skipped item -->
+        <div class="gallery-group skipped">
+          <div class="gallery-group-header">
+            <h5>Item PQR678 (Skipped)</h5>
+            <div class="final-controls">
+              <input type="checkbox" class="skip-checkbox-final" id="skip6" checked title="Skip this item">
+              <button class="refresh-btn-final" title="Add new images for this item">
+                <span>🔄</span> Add New Images
+              </button>
+            </div>
+          </div>
+          <div class="gallery-item-id">Short Description: Orange Water Bottle</div>
+          <div class="variant-row">
+            <div class="gallery-item">
+              <img src="https://via.placeholder.com/200x150/e67e22/ffffff?text=Image+1" class="gallery-thumbnail" alt="Image 1">
+              <div class="gallery-info">
+                <div class="gallery-filename">image1.jpg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item with refreshed images -->
+        <div class="gallery-group">
+          <div class="gallery-group-header">
+            <h5>Item STU901</h5>
+            <div class="final-controls">
+              <input type="checkbox" class="skip-checkbox-final" id="skip7" title="Skip this item">
+              <button class="refresh-btn-final" title="Add new images for this item">
+                <span>🔄</span> Add New Images
+              </button>
+            </div>
+          </div>
+          <div class="gallery-item-id">Short Description: Black Backpack</div>
+          <div class="variant-row">
+            <div class="gallery-item selected">
+              <img src="https://via.placeholder.com/200x150/34495e/ffffff?text=Original+1" class="gallery-thumbnail" alt="Image 1">
+              <div class="gallery-info">
+                <div class="gallery-filename">image1.jpg</div>
+              </div>
+            </div>
+            <div class="new-images-separator"></div>
+            <div class="gallery-item" style="position: relative;">
+              <span class="new-images-badge">NEW</span>
+              <img src="https://via.placeholder.com/200x150/27ae60/ffffff?text=New+1" class="gallery-thumbnail" alt="New Image 1">
+              <div class="gallery-info">
+                <div class="gallery-filename">new_image1.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item" style="position: relative;">
+              <span class="new-images-badge">NEW</span>
+              <img src="https://via.placeholder.com/200x150/27ae60/ffffff?text=New+2" class="gallery-thumbnail" alt="New Image 2">
+              <div class="gallery-info">
+                <div class="gallery-filename">new_image2.jpg</div>
+              </div>
+            </div>
+            <div class="gallery-item" style="position: relative;">
+              <span class="new-images-badge">NEW</span>
+              <img src="https://via.placeholder.com/200x150/27ae60/ffffff?text=New+3" class="gallery-thumbnail" alt="New Image 3">
+              <div class="gallery-info">
+                <div class="gallery-filename">new_image3.jpg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Demo interactivity
+    document.querySelectorAll('.skip-checkbox-final').forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        const group = this.closest('.gallery-group');
+        if (this.checked) {
+          group.classList.add('skipped');
+        } else {
+          group.classList.remove('skipped');
+        }
+      });
+    });
+
+    document.querySelectorAll('.refresh-btn-final').forEach(btn => {
+      btn.addEventListener('click', function() {
+        this.classList.add('loading');
+        setTimeout(() => {
+          this.classList.remove('loading');
+          alert('Add New Images clicked! (Demo - would fetch 3 new images and append them)');
+        }, 1500);
+      });
+    });
+  </script>
+</body>
+</html>
+
+
