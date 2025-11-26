@@ -821,7 +821,7 @@ def gallery_generate():
         return jsonify({"success": False, "error": str(e)}), 500
 
 def handle_pos_items_gallery(pos_items, sites_str, images_per_item, filter_str, start_index):
-    """Handle gallery generation for POS items format
+    """Handle gallery generation for todo items format
     
     For each POS item:
     1. Download ImageURL1 (or create placeholder if failed)
