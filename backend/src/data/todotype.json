@@ -1,0 +1,8 @@
+[  
+  { "type": "meeting", "description": "Team meeting to discuss project updates." },  
+  { "type": "restroom_inspection", "description": "Inspect all restrooms for cleanliness and supplies." },  
+  { "type": "observation", "description": "Observe floor staff for compliance with safety protocols." },  
+  { "type": "at_risk_order", "description": "Order supplies for at-risk patients." },  
+  { "type": "temperature_excursion", "description": "Check for temperature excursions in the storage areas." },  
+  { "type": "safety_inspection", "description": "Conduct safety inspections of all work areas." }  
+]
