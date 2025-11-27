@@ -1,14 +1,25 @@
 {
   "name": "todolist",
-  "version": "0.0.1",
-  "description": "To Do List web application",
-  "main": "server.js",
+  "version": "0.1.0",
+  "description": "Supervisor To-Do List for Warehouse Management System",
+  "private": true,
   "scripts": {
-    "start": "node server.js"
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "node server.js",
+    "preview": "npm run build && npm start",
+    "reset": "cd backend && node reset-data.js"
   },
+  "keywords": ["wms", "todolist", "supervisor", "react", "express"],
+  "author": "sidmsmith",
+  "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",
     "node-fetch": "^2.7.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }
-

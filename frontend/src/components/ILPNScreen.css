@@ -1,0 +1,643 @@
+/* ILPN Screen Styles - Based on provided CSS */
+
+.ilpn-screen {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--manh-primary-background-color, #1a1a1a);
+  color: var(--manh-text-color, #ffffff);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+  overflow: hidden;
+}
+
+/* ========== HEADER ========== */
+.ilpn-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--manh-app-header-background-color, #2d2d2d);
+  color: var(--manh-app-header-contrast, #ffffff);
+  padding: 0 16px;
+  height: 56px;
+  min-height: 56px;
+  border-bottom: 1px solid var(--manh-border-color, #444);
+  z-index: 10;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.menu-toggle {
+  background: none;
+  border: none;
+  color: var(--manh-app-header-contrast, #ffffff);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: 400;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--manh-app-header-contrast, #ffffff);
+}
+
+.header-center {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  color: var(--manh-app-header-contrast, #ffffff);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-icon {
+  background: none;
+  border: none;
+  color: var(--manh-app-header-contrast, #ffffff);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+}
+
+.header-icon:hover {
+  opacity: 0.8;
+}
+
+/* ========== MAIN CONTENT ========== */
+.ilpn-main-content {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 56px);
+  overflow: hidden;
+}
+
+/* ========== FILTERS PANEL ========== */
+.ilpn-filters-panel {
+  width: 350px;
+  min-width: 350px;
+  background-color: var(--manh-filter-panel-background-color, #2a2a2a);
+  color: var(--manh-filter-panel-contrast, #ffffff);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--manh-border-color, #444);
+  overflow: hidden;
+}
+
+.filters-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background-color: var(--manh-filter-panel-header-background-color, #333);
+  border-bottom: 1px solid var(--manh-border-color, #444);
+  min-height: 48px;
+}
+
+.filters-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+  color: var(--manh-filter-panel-contrast, #ffffff);
+  text-transform: uppercase;
+}
+
+.filter-count {
+  height: 20px;
+  width: 20px;
+  background-color: var(--manh-badge-background-color, #dc3545);
+  color: var(--manh-badge-text-color, #ffffff);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.filters-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clear-all-btn {
+  background-color: var(--manh-filter-panel-btn-background-color, #3a3a3a);
+  color: var(--manh-filter-panel-contrast, #ffffff);
+  border: 1px solid var(--manh-header-button-active-color, #555);
+  border-radius: 30px;
+  font-size: 12px;
+  padding: 7px 12px;
+  cursor: pointer;
+  text-transform: none;
+}
+
+.clear-all-btn:hover {
+  opacity: 0.9;
+}
+
+.settings-icon {
+  background: none;
+  border: none;
+  color: var(--manh-filter-panel-contrast, #ffffff);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.filters-tabs {
+  display: flex;
+  background-color: var(--manh-summary-bar-background-color, #333);
+  border-bottom: 1px solid var(--manh-border-color, #444);
+}
+
+.filter-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--manh-filter-panel-contrast, #ffffff);
+  padding: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  border-bottom: 2px solid transparent;
+}
+
+.filter-tab.active {
+  border-bottom-color: var(--manh-primary-action-btn-background-color, #0054e9);
+  color: var(--manh-primary-action-btn-background-color, #0054e9);
+  font-weight: 600;
+}
+
+.filters-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px;
+}
+
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.filter-label {
+  display: block;
+  color: var(--manh-filter-panel-contrast, #ffffff);
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  line-height: 17px;
+}
+
+.filter-input-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--manh-layout-border-color, #555);
+  border-radius: 5px;
+  background-color: var(--manh-filter-panel-background-color, #2a2a2a);
+  min-height: 35px;
+}
+
+.filter-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--manh-filter-panel-contrast, #ffffff);
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
+}
+
+.filter-input::placeholder {
+  color: var(--manh-filter-panel-contrast, #ffffff);
+  opacity: 0.6;
+}
+
+.filter-search-icon,
+.filter-bookmark-icon {
+  background: none;
+  border: none;
+  color: var(--manh-filter-panel-contrast, #ffffff);
+  padding: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.filter-clear-btn {
+  background-color: var(--manh-filter-panel-btn-background-color, #3a3a3a);
+  color: var(--manh-filter-panel-contrast, #ffffff);
+  border: none;
+  border-radius: 30px;
+  font-size: 12px;
+  padding: 7px 12px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.filter-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background-color: var(--manh-filter-panel-background-color, #2a2a2a);
+}
+
+.filter-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--manh-filter-panel-contrast, #ffffff);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.filter-checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.filter-btn {
+  flex: 1;
+  background-color: var(--manh-filter-panel-btn-background-color, #3a3a3a);
+  color: var(--manh-filter-panel-contrast, #ffffff);
+  border: 1px solid var(--manh-layout-border-color, #555);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.filter-btn:hover {
+  opacity: 0.9;
+}
+
+/* ========== CONTENT PANEL ========== */
+.ilpn-content-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--manh-right-panel-container-bg-color, #1a1a1a);
+  overflow: hidden;
+}
+
+.action-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: var(--manh-table-actions-bar-background-color, #2a2a2a);
+  border-bottom: 1px solid var(--manh-border-color, #444);
+}
+
+.action-btn {
+  background-color: var(--manh-primary-action-btn-background-color, #0054e9);
+  color: var(--manh-actions-buttons-contrast, #ffffff);
+  border: 1px solid var(--manh-header-button-active-color, #0054e9);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.action-btn:hover {
+  opacity: 0.9;
+}
+
+.column-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: var(--manh-table-actions-bar-background-color, #2a2a2a);
+  border-bottom: 1px solid var(--manh-border-color, #444);
+}
+
+.column-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--manh-card-font-color, #ffffff);
+}
+
+.sort-indicator {
+  color: var(--manh-card-font-color, #ffffff);
+  font-size: 16px;
+}
+
+.view-controls {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+.view-btn {
+  background: none;
+  border: none;
+  color: var(--manh-card-font-color, #ffffff);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* ========== CARDS CONTAINER ========== */
+.cards-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: visible;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: #1a1a1a;
+}
+
+.ilpn-card {
+  position: relative;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 5px 10px;
+  min-height: 133px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: visible;
+}
+
+/* Right arrow button - matches .list-card-action-div */
+.card-arrow {
+  position: absolute;
+  right: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 50px;
+  background-color: var(--manh-swipe-menu-trigger-btn-background-color, #3a3a3a);
+  border: none;
+  cursor: pointer !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 12;
+}
+
+.card-arrow:hover {
+  background-color: #4a4a4a;
+}
+
+/* Arrow icon - matches .list-card-action-left-arrow */
+.arrow-icon {
+  display: block;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid var(--manh-swipe-menu-trigger-btn-icon-color, #ffffff);
+  background: transparent;
+  padding: 0 !important;
+  cursor: pointer !important;
+}
+
+.card-content {
+  flex: 1;
+  display: flex;
+  gap: 16px;
+  margin-right: 40px;
+  margin-left: 0;
+  padding: 5px;
+  position: relative;
+  overflow: visible;
+}
+
+.card-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-column-1 {
+  width: 0;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.card-column-2 {
+  flex: 0 0 220px;
+  min-width: 0;
+  margin-left: 200px;
+}
+
+.card-column-3 {
+  flex: 0 0 220px;
+  min-width: 0;
+}
+
+.card-column-4 {
+  flex: 1 1 auto;
+  min-width: 300px;
+  max-width: none;
+}
+
+
+.status-pill {
+  color: #ffffff;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px !important;
+  font-weight: 700;
+  line-height: 43px !important;
+  text-align: center;
+  background-color: #4f93e4;
+  border-radius: 25px;
+  width: 165px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: calc(200px / 2 - 165px / 2);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.field-row {
+  display: flex;
+  padding: 2px 4px;
+  gap: 8px;
+  min-height: 20px;
+}
+
+.field-row-first {
+  margin-top: 0;
+  padding-top: 12px;
+}
+
+.field-row-last {
+  margin-bottom: 0;
+  padding-bottom: 12px;
+}
+
+.field-label {
+  font-size: 14px;
+  overflow: visible;
+  white-space: nowrap;
+  max-width: 800px;
+  color: #333333;
+  font-weight: bold;
+  padding-right: 4px;
+}
+
+.field-value {
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 800px;
+  color: #333333;
+  user-select: all;
+  -webkit-user-select: all;
+}
+
+/* Allow tooltips to overflow */
+.custom-tooltip-wrapper {
+  overflow: visible !important;
+  position: relative;
+}
+
+.field-value .custom-tooltip-wrapper {
+  display: inline-block;
+  overflow: visible;
+}
+
+/* Link styling for clickable items in cards */
+.field-value a,
+.link-value {
+  color: #0054e9;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.field-value a:hover,
+.link-value:hover {
+  color: #003d9e;
+  text-decoration: underline;
+}
+
+/* ========== PAGINATION FOOTER ========== */
+.pagination-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background-color: var(--manh-footer-background-color, #2a2a2a);
+  border-top: 1px solid var(--manh-border-color, #444);
+  color: var(--manh-filter-panel-contrast, #ffffff);
+}
+
+.pagination-text {
+  font-size: 14px;
+  color: var(--manh-filter-panel-contrast, #ffffff);
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagination-btn {
+  width: 30px;
+  height: 30px;
+  background-color: var(--manh-pagination-btn-background-color, #3a3a3a);
+  border: 1px solid var(--manh-autocomplete-input-dark-background-color, #555);
+  border-radius: 4px;
+  color: var(--manh-filter-panel-contrast, #ffffff);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-btn:hover {
+  opacity: 0.9;
+}
+
+.pagination-page {
+  font-size: 14px;
+  color: var(--manh-filter-panel-contrast, #ffffff);
+  padding: 0 8px;
+}
+
+.records-per-page {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.records-per-page label {
+  font-size: 14px;
+  color: var(--manh-filter-panel-contrast, #ffffff);
+}
+
+.page-select {
+  background-color: var(--manh-pagination-btn-background-color, #3a3a3a);
+  color: var(--manh-filter-panel-contrast, #ffffff);
+  border: 1px solid var(--manh-autocomplete-input-dark-background-color, #555);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  max-width: 78px;
+  height: 32px;
+}
+
+/* Scrollbar Styling */
+.filters-content::-webkit-scrollbar,
+.cards-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.filters-content::-webkit-scrollbar-track,
+.cards-container::-webkit-scrollbar-track {
+  background: var(--manh-filter-panel-background-color, #2a2a2a);
+}
+
+.filters-content::-webkit-scrollbar-thumb,
+.cards-container::-webkit-scrollbar-thumb {
+  background: var(--manh-border-color, #555);
+  border-radius: 4px;
+}
+
+.filters-content::-webkit-scrollbar-thumb:hover,
+.cards-container::-webkit-scrollbar-thumb:hover {
+  background: var(--manh-border-color, #666);
+}
+

@@ -1,0 +1,98 @@
+[
+  {
+    "id": "meeting",
+    "name": "Team Meeting",
+    "priority": 3,
+    "completionMethod": "auto",
+    "completionFields": [],
+    "dismissalCodes": [
+      { "code": "looks_okay", "label": "Looks okay" },
+      { "code": "handled_verbally", "label": "Handled verbally" },
+      { "code": "false_alert", "label": "False alert" },
+      { "code": "other", "label": "Other" }
+    ]
+  },
+  {
+    "id": "restroom_inspection",
+    "name": "Restroom Inspection",
+    "priority": 2,
+    "completionMethod": "manual",
+    "completionFields": [
+      { "fieldName": "cleanliness_score", "type": "rating", "label": "Cleanliness Score (1-5)", "required": true },
+      { "fieldName": "comments", "type": "textarea", "label": "Comments", "required": false }
+    ],
+    "dismissalCodes": [
+      { "code": "already_completed", "label": "Already completed" },
+      { "code": "false_alert", "label": "False alert" },
+      { "code": "other", "label": "Other" }
+    ]
+  },
+  {
+    "id": "observation",
+    "name": "Observation",
+    "priority": 2,
+    "completionMethod": "none",
+    "completionFields": [],
+    "dismissalCodes": [
+      { "code": "handled", "label": "Handled" },
+      { "code": "false_alert", "label": "False alert" },
+      { "code": "other", "label": "Other" }
+    ],
+    "notes": "Dynamic todo - links to external WMS record.  No manual completion."
+  },
+  {
+    "id": "at_risk_order",
+    "name": "At-Risk Order",
+    "priority": 2,
+    "completionMethod": "none",
+    "completionFields": [],
+    "dismissalCodes": [
+      { "code": "resolved", "label": "Resolved" },
+      { "code": "false_alert", "label": "False alert" },
+      { "code": "other", "label": "Other" }
+    ],
+    "notes": "Dynamic todo - auto-disappears when condition = false"
+  },
+  {
+    "id": "temperature_excursion",
+    "name": "Temperature Excursion",
+    "priority": 1,
+    "completionMethod": "none",
+    "completionFields": [],
+    "dismissalCodes": [
+      { "code": "temp_corrected", "label": "Temperature corrected" },
+      { "code": "false_alert", "label": "False alert" },
+      { "code": "other", "label": "Other" }
+    ],
+    "notes": "Critical dynamic todo - always pinned top"
+  },
+  {
+    "id": "safety_inspection",
+    "name": "Safety Inspection",
+    "priority": 2,
+    "completionMethod": "manual",
+    "completionFields": [
+      { "fieldName": "inspection_status", "type": "select", "label": "Status", "options": ["Pass", "Fail", "Needs Attention"], "required": true },
+      { "fieldName": "notes", "type": "textarea", "label": "Notes", "required": false }
+    ],
+    "dismissalCodes": [
+      { "code": "completed", "label": "Completed" },
+      { "code": "false_alert", "label": "False alert" }
+    ]
+  },
+  {
+    "id": "equipment_maintenance",
+    "name": "Equipment Maintenance",
+    "priority": 3,
+    "completionMethod": "manual",
+    "completionFields": [
+      { "fieldName": "maintenance_type", "type": "select", "label": "Maintenance Type", "options": ["Preventive", "Corrective"], "required": true },
+      { "fieldName": "technician_name", "type": "text", "label": "Technician Name", "required": true }
+    ],
+    "dismissalCodes": [
+      { "code": "scheduled", "label": "Scheduled for later" },
+      { "code": "completed", "label": "Already completed" },
+      { "code": "other", "label": "Other" }
+    ]
+  }
+]

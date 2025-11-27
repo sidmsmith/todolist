@@ -1,0 +1,167 @@
+[
+  {
+    "id": "todo_001",
+    "typeId": "temperature_excursion",
+    "title": "Temperature Excursion - Reefer Zone 3",
+    "description": "Temperature out of range in cold storage",
+    "category": "CRITICAL",
+    "priority": 1,
+    "dueTime": "2025-11-26T09:47:00Z",
+    "createdAt": "2025-11-26T09:20:00Z",
+    "assignmentGroup": "ALL",
+    "status": "Open",
+    "completionMethod": "none",
+    "details": {
+      "zone": "Reefer Zone 3",
+      "temperature": "-18.5°C",
+      "externalLink": "/alerts/temp_alert_789"
+    }
+  },
+  {
+    "id": "todo_002",
+    "typeId": "meeting",
+    "title": "Daily Stand-up",
+    "description": "Team sync meeting - 10:00 AM",
+    "category": "HIGH",
+    "priority": 3,
+    "dueTime": "2025-11-26T10:00:00Z",
+    "createdAt": "2025-11-26T09:00:00Z",
+    "assignmentGroup": "ALL",
+    "status": "Open",
+    "completionMethod": "auto",
+    "details": {
+      "location": "Conference Room A"
+    }
+  },
+  {
+    "id": "todo_003",
+    "typeId": "observation",
+    "title": "Observe Mike - Safety Walk",
+    "description": "Safety observation - overdue 18 minutes",
+    "category": "HIGH",
+    "priority": 2,
+    "dueTime": "2025-11-26T10:12:00Z",
+    "createdAt": "2025-11-26T09:00:00Z",
+    "assignmentGroup": "ALL",
+    "status": "Open",
+    "completionMethod": "none",
+    "details": {
+      "externalLink": "/observations/obs_12346",
+      "employee": "Mike"
+    }
+  },
+  {
+    "id": "todo_004",
+    "typeId": "observation",
+    "title": "Observe Sarah - Inbound Process",
+    "description": "Safety observation",
+    "category": "HIGH",
+    "priority": 2,
+    "dueTime": "2025-11-26T10:45:00Z",
+    "createdAt": "2025-11-26T09:00:00Z",
+    "assignmentGroup": "ALL",
+    "status": "Open",
+    "completionMethod": "none",
+    "details": {
+      "externalLink": "/observations/obs_12345",
+      "employee": "Sarah"
+    }
+  },
+  {
+    "id": "todo_005",
+    "typeId": "observation",
+    "title": "Observe Jenna - Quality Check",
+    "description": "Safety observation - overdue 5 minutes",
+    "category": "HIGH",
+    "priority": 2,
+    "dueTime": "2025-11-26T11:25:00Z",
+    "createdAt": "2025-11-26T09:00:00Z",
+    "assignmentGroup": "ALL",
+    "status": "Open",
+    "completionMethod": "none",
+    "details": {
+      "externalLink": "/observations/obs_12347",
+      "employee": "Jenna"
+    }
+  },
+  {
+    "id": "todo_006",
+    "typeId": "at_risk_order",
+    "title": "At-Risk Order ON12345678",
+    "description": "Order cutoff approaching - 11 minutes remaining",
+    "category": "HIGH",
+    "priority": 2,
+    "dueTime": "2025-11-26T11:30:00Z",
+    "createdAt": "2025-11-26T11:19:00Z",
+    "assignmentGroup": "ALL",
+    "status": "Open",
+    "completionMethod": "none",
+    "details": {
+      "orderNumber": "ON12345678",
+      "cutoffMinutes": 11,
+      "externalLink": "/orders/ON12345678"
+    }
+  },
+  {
+    "id": "todo_007",
+    "typeId": "at_risk_order",
+    "title": "At-Risk Order ON12345679",
+    "description": "Order cutoff approaching - 27 minutes remaining",
+    "category": "HIGH",
+    "priority": 2,
+    "dueTime": "2025-11-26T11:46:00Z",
+    "createdAt": "2025-11-26T11:19:00Z",
+    "assignmentGroup": "ALL",
+    "status": "Open",
+    "completionMethod": "none",
+    "details": {
+      "orderNumber": "ON12345679",
+      "cutoffMinutes": 27,
+      "externalLink": "/orders/ON12345679"
+    }
+  },
+  {
+    "id": "todo_008",
+    "typeId": "restroom_inspection",
+    "title": "Weekly Restroom Check",
+    "description": "Restroom cleanliness inspection - overdue 2h 14m",
+    "category": "MEDIUM",
+    "priority": 2,
+    "dueTime": "2025-11-26T08:00:00Z",
+    "createdAt": "2025-11-26T07:00:00Z",
+    "assignmentGroup": "ALL",
+    "status": "Open",
+    "completionMethod": "manual",
+    "details": {}
+  },
+  {
+    "id": "todo_009",
+    "typeId": "safety_inspection",
+    "title": "Safety Walk - Building A",
+    "description": "General facility safety inspection",
+    "category": "MEDIUM",
+    "priority": 2,
+    "dueTime": "2025-11-26T14:30:00Z",
+    "createdAt": "2025-11-26T08:00:00Z",
+    "assignmentGroup": "ALL",
+    "status": "Snoozed",
+    "snoozedUntil": "2025-11-26T14:30:00Z",
+    "completionMethod": "manual",
+    "details": {}
+  },
+  {
+    "id": "todo_010",
+    "typeId": "equipment_maintenance",
+    "title": "Forklift Preventive Maintenance",
+    "description": "Monthly maintenance check on Forklift #3",
+    "category": "MEDIUM",
+    "priority": 3,
+    "dueTime": "2025-11-27T08:00:00Z",
+    "createdAt": "2025-11-26T08:00:00Z",
+    "assignmentGroup": "ALL",
+    "status": "Open",
+    "completionMethod": "manual",
+    "details": {}
+  }
+]
+
