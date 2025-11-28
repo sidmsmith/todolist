@@ -1160,6 +1160,46 @@ body {
   width: 90%;
 }
 
+/* Dark gray header for Todo Type Manager (similar to To Do List header) */
+.todo-type-manager-header {
+  background-color: #D0D5E2;
+}
+
+.todo-types-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.todo-types-table th,
+.todo-types-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.todo-types-table th {
+  font-weight: 600;
+  color: #212529;
+}
+
+/* Darker header row */
+.todo-types-table .table-header-row {
+  background-color: #6c757d;
+  color: white;
+}
+
+.todo-types-table .table-header-row th {
+  color: white;
+  font-weight: 600;
+}
+
+.todo-types-table td code {
+  background: #f8f9fa;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
 .editor-tabs {
   display: flex;
   gap: 0.5rem;
@@ -1220,6 +1260,18 @@ body {
   padding: 1rem;
   margin-bottom: 1rem;
   background: #f8f9fa;
+  cursor: move;
+  transition: all 0.2s;
+}
+
+.field-builder-card.dragging {
+  opacity: 0.5;
+  transform: scale(0.95);
+}
+
+.field-builder-card.drag-over {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
 .field-builder-header {
@@ -1241,6 +1293,18 @@ body {
   border: 1px solid #dee2e6;
   border-radius: var(--border-radius);
   background: #f8f9fa;
+  cursor: move;
+  transition: all 0.2s;
+}
+
+.code-builder-row.dragging {
+  opacity: 0.5;
+  transform: scale(0.95);
+}
+
+.code-builder-row.drag-over {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
 .option-row {
@@ -1312,6 +1376,17 @@ body {
   font-weight: 600;
   font-size: 13px;
   color: #495057;
+}
+
+/* Darker header row */
+.todo-types-table .table-header-row {
+  background-color: #6c757d !important;
+}
+
+.todo-types-table .table-header-row th {
+  background-color: #6c757d !important;
+  color: white !important;
+  font-weight: 600;
 }
 
 .todo-types-table td code {

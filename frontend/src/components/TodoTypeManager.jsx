@@ -93,7 +93,7 @@ export const TodoTypeManager = ({ isOpen, onClose }) => {
     <>
       <div className="modal-overlay" onClick={onClose}>
         <div className="modal-content todo-type-manager" onClick={e => e.stopPropagation()} style={{ maxWidth: '900px', maxHeight: '90vh' }}>
-          <div className="modal-header">
+          <div className="modal-header todo-type-manager-header">
             <h2>Manage Todo Types</h2>
             <button className="modal-close" onClick={onClose}>✕</button>
           </div>
@@ -113,12 +113,11 @@ export const TodoTypeManager = ({ isOpen, onClose }) => {
             ) : (
               <table className="todo-types-table">
                 <thead>
-                  <tr>
+                  <tr className="table-header-row">
                     <th>ID</th>
                     <th>Name</th>
                     <th>Priority</th>
                     <th>Completion Method</th>
-                    <th>Fields</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -129,7 +128,6 @@ export const TodoTypeManager = ({ isOpen, onClose }) => {
                       <td>{type.name}</td>
                       <td>{type.priority}</td>
                       <td>{type.completionMethod}</td>
-                      <td>{(type.completionFields || []).length} field(s)</td>
                       <td>
                         <button onClick={() => handleEdit(type)} className="btn btn-sm btn-primary">
                           Edit

@@ -230,6 +230,15 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
     }));
   };
 
+  const moveDismissalCode = (fromIndex, toIndex) => {
+    setFormData(prev => {
+      const codes = [...prev.dismissalCodes];
+      const [moved] = codes.splice(fromIndex, 1);
+      codes.splice(toIndex, 0, moved);
+      return { ...prev, dismissalCodes: codes };
+    });
+  };
+
   const addCompletionCode = () => {
     setFormData(prev => ({
       ...prev,
@@ -253,6 +262,15 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
     }));
   };
 
+  const moveCompletionCode = (fromIndex, toIndex) => {
+    setFormData(prev => {
+      const codes = [...prev.completionCodes];
+      const [moved] = codes.splice(fromIndex, 1);
+      codes.splice(toIndex, 0, moved);
+      return { ...prev, completionCodes: codes };
+    });
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -272,12 +290,14 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
             >
               Basic Info
             </button>
-            <button 
-              className={activeTab === 'fields' ? 'active' : ''} 
-              onClick={() => setActiveTab('fields')}
-            >
-              Completion Fields
-            </button>
+            {formData.completionMethod !== 'dropdown' && (
+              <button 
+                className={activeTab === 'fields' ? 'active' : ''} 
+                onClick={() => setActiveTab('fields')}
+              >
+                Completion Fields
+              </button>
+            )}
             <button 
               className={activeTab === 'dismissal' ? 'active' : ''} 
               onClick={() => setActiveTab('dismissal')}
@@ -546,7 +566,8 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
                       Remove
                     </button>
                   </div>
-                ))
+                  )}
+                />
               )}
             </div>
           )}
@@ -592,7 +613,8 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
                       Remove
                     </button>
                   </div>
-                ))
+                  )}
+                />
               )}
             </div>
           )}
