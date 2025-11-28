@@ -41,8 +41,8 @@ function App() {
 
   const badgeCount = getBadgeCount();
 
-  // Show To Dos Screen if requested
-  if (showILPNScreen) {
+  // Show To Dos Screen if requested (desktop only)
+  if (showILPNScreen && !isMobile) {
     return (
       <div className="app">
         <ILPNScreen />
