@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Data - To-Do List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        button {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+        }
+        
+        .btn-reset-all {
+            background: #dc3545;
+        }
+        
+        .btn-reset-all:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+        }
+        
+        .btn-reset-todos {
+            background: #fd7e14;
+        }
+        
+        .btn-reset-todos:hover {
+            background: #e66a00;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(253, 126, 20, 0.4);
+        }
+        
+        .btn-reset-types {
+            background: #6c757d;
+        }
+        
+        .btn-reset-types:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .status.show {
+            display: block;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Reset Data</h1>
+        <p class="subtitle">Reset your To-Do List data to default seed values</p>
+        
+        <div class="warning">
+            ⚠️ <strong>Warning:</strong> This will reset all data to defaults. Make sure ENABLE_RESET=true is set in Vercel.
+        </div>
+        
+        <div class="button-group">
+            <button class="btn-reset-all" onclick="resetAll()">
+                Reset All Data (Todos + Types)
+            </button>
+            <button class="btn-reset-todos" onclick="resetTodos()">
+                Reset Only Todos
+            </button>
+            <button class="btn-reset-types" onclick="resetTypes()">
+                Reset Only Todo Types
+            </button>
+        </div>
+        
+        <div id="status" class="status"></div>
+    </div>
+    
+    <script>
+        const API_BASE = window.location.origin;
+        
+        function showStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type} show`;
+            
+            // Auto-hide after 5 seconds for success/info
+            if (type !== 'error') {
+                setTimeout(() => {
+                    statusEl.classList.remove('show');
+                }, 5000);
+            }
+        }
+        
+        async function resetAll() {
+            const btn = event.target;
+            btn.disabled = true;
+            showStatus('Resetting all data...', 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/reset`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showStatus(`✅ ${data.message || 'All data reset successfully!'}`, 'success');
+                } else {
+                    showStatus(`❌ Error: ${data.error || 'Failed to reset data'}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+        
+        async function resetTodos() {
+            const btn = event.target;
+            btn.disabled = true;
+            showStatus('Resetting todos...', 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/reset/todos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showStatus(`✅ ${data.message || 'Todos reset successfully!'}`, 'success');
+                } else {
+                    showStatus(`❌ Error: ${data.error || 'Failed to reset todos'}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+        
+        async function resetTypes() {
+            const btn = event.target;
+            btn.disabled = true;
+            showStatus('Resetting todo types...', 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/reset/todo-types`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showStatus(`✅ ${data.message || 'Todo types reset successfully!'}`, 'success');
+                } else {
+                    showStatus(`❌ Error: ${data.error || 'Failed to reset todo types'}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
+
