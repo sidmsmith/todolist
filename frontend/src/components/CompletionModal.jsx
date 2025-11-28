@@ -13,7 +13,7 @@ export const CompletionModal = ({ isOpen, todo, todoType, onComplete, onCancel }
     }
   }, [isOpen, todo?.id]);
 
-  if (!isOpen || !todo || ! todoType) return null;
+  if (!isOpen || !todo || !todoType) return null;
 
   const handleCancel = () => {
     if (onCancel) {
@@ -99,7 +99,7 @@ export const CompletionModal = ({ isOpen, todo, todoType, onComplete, onCancel }
         
         return (
           <div key={field.fieldName} className={`form-group ${field.required ? 'required-field' : ''}`}>
-            <label>{field. label} {field.required && <span className="required-asterisk">*</span>}</label>
+            <label>{field.label} {field.required && <span className="required-asterisk">*</span>}</label>
             <div className="rating-group">
               {ratings.map(rating => {
                 const isSelected = formData[field.fieldName] === rating;
@@ -137,8 +137,8 @@ export const CompletionModal = ({ isOpen, todo, todoType, onComplete, onCancel }
           <div key={field.fieldName} className={`form-group ${field.required ? 'required-field' : ''}`}>
             <label>{field.label} {field.required ? <span className="required-asterisk">*</span> : '(optional)'}</label>
             <textarea
-              value={formData[field. fieldName] || ''}
-              onChange={(e) => handleInputChange(field. fieldName, e.target.value)}
+              value={formData[field.fieldName] || ''}
+              onChange={(e) => handleInputChange(field.fieldName, e.target.value)}
               rows="3"
               required={field.required}
             />
@@ -151,8 +151,8 @@ export const CompletionModal = ({ isOpen, todo, todoType, onComplete, onCancel }
             <label>{field.label} {field.required && <span className="required-asterisk">*</span>}</label>
             <select
               value={formData[field.fieldName] || ''}
-              onChange={(e) => handleInputChange(field.fieldName, e.target. value)}
-              required={field. required}
+              onChange={(e) => handleInputChange(field.fieldName, e.target.value)}
+              required={field.required}
             >
               <option value="">-- Select --</option>
               {field.options && field.options.map(opt => (
@@ -264,10 +264,10 @@ export const CompletionModal = ({ isOpen, todo, todoType, onComplete, onCancel }
 
         <div className="modal-body">
           <p className="todo-meta">
-            Due: {new Date(todo. dueTime).toLocaleString()} | Assigned to: {todo.assignmentGroup}
+            Due: {new Date(todo.dueTime).toLocaleString()} | Assigned to: {todo.assignmentGroup}
           </p>
 
-          {todoType. completionFields && todoType.completionFields.length > 0 ?  (
+          {todoType.completionFields && todoType.completionFields.length > 0 ? (
             <form>
               {todoType.completionFields.map(field => renderField(field))}
             </form>
