@@ -1165,6 +1165,8 @@ body {
 .todo-type-editor .btn-sm.btn-primary,
 .todo-type-editor .btn-danger,
 .todo-type-editor .btn-sm.btn-danger,
+.todo-type-manager .btn-primary,
+.todo-type-manager .btn-secondary,
 .todo-type-manager .todo-type-btn-primary {
   background-color: #4f93e4;
   color: white;
@@ -1175,20 +1177,11 @@ body {
 .todo-type-editor .btn-sm.btn-primary:hover,
 .todo-type-editor .btn-danger:hover,
 .todo-type-editor .btn-sm.btn-danger:hover,
+.todo-type-manager .btn-primary:hover,
+.todo-type-manager .btn-secondary:hover,
 .todo-type-manager .todo-type-btn-primary:hover {
   background-color: #3d7bc4;
   border-color: #3d7bc4;
-}
-
-.todo-type-editor .btn-secondary {
-  background-color: #6c757d;
-  color: white;
-  border-color: #6c757d;
-}
-
-.todo-type-editor .btn-secondary:hover {
-  background-color: #5a6268;
-  border-color: #5a6268;
 }
 
 /* Dark gray header for Todo Type Manager (similar to To Do List header) */
