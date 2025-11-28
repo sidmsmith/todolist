@@ -114,13 +114,15 @@ function App() {
         />
       )}
 
-      {/* Todo Badge - Positioned in top-right corner */}
-      <div className="todo-badge-container">
-        <TodoBadge 
-          count={badgeCount} 
-          onClick={() => setShowTodoPanel(!showTodoPanel)}
-        />
-      </div>
+      {/* Todo Badge - Positioned in top-right corner (desktop only) */}
+      {!isMobile && (
+        <div className="todo-badge-container">
+          <TodoBadge 
+            count={badgeCount} 
+            onClick={() => setShowTodoPanel(!showTodoPanel)}
+          />
+        </div>
+      )}
 
       {/* Toggle button to show To Dos Screen */}
       <button 
@@ -182,21 +184,23 @@ function App() {
       )}
 
         {/* Todo Panel (Dropdown or Sheet based on screen size) */}
-        {showTodoPanel && (
-          isMobile ? (
-            <TodoSheet
-              todos={todos}
-              onComplete={completeTodo}
-              onSnooze={snoozeTodo}
-              onDismiss={dismissTodo}
-              getTodoTypeById={getTodoTypeById}
-              onClose={() => setShowTodoPanel(false)}
-              badgeCount={badgeCount}
-              snoozedCount={snoozedCount}
-              showSnoozed={showSnoozed}
-              toggleShowSnoozed={toggleShowSnoozed}
-            />
-          ) : (
+        {isMobile ? (
+          // Mobile: Always show TodoSheet, no close option
+          <TodoSheet
+            todos={todos}
+            onComplete={completeTodo}
+            onSnooze={snoozeTodo}
+            onDismiss={dismissTodo}
+            getTodoTypeById={getTodoTypeById}
+            onClose={null}
+            badgeCount={badgeCount}
+            snoozedCount={snoozedCount}
+            showSnoozed={showSnoozed}
+            toggleShowSnoozed={toggleShowSnoozed}
+          />
+        ) : (
+          // Desktop: Show dropdown when badge is clicked
+          showTodoPanel && (
             <div className="todo-dropdown-container">
               <TodoDropdown
                 todos={todos}

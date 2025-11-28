@@ -208,7 +208,9 @@ export const TodoSheet = ({
             isChecked={showSnoozed}
             onClick={toggleShowSnoozed}
           />
-          <button className="btn-close" onClick={onClose}>✕</button>
+          {onClose && (
+            <button className="btn-close" onClick={onClose}>✕</button>
+          )}
         </div>
       </div>
 
