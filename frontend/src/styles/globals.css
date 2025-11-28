@@ -1160,15 +1160,15 @@ body {
   width: 90%;
 }
 
-/* Manhattan blue buttons for Todo Type screens (#0066cc) */
+/* Manhattan blue buttons for Todo Type screens (using pill color #4f93e4 from ILPNScreen) */
 .todo-type-editor .btn-primary,
 .todo-type-editor .btn-sm.btn-primary,
 .todo-type-editor .btn-danger,
 .todo-type-editor .btn-sm.btn-danger,
 .todo-type-manager .todo-type-btn-primary {
-  background-color: #0066cc;
+  background-color: #4f93e4;
   color: white;
-  border-color: #0066cc;
+  border-color: #4f93e4;
 }
 
 .todo-type-editor .btn-primary:hover,
@@ -1176,8 +1176,8 @@ body {
 .todo-type-editor .btn-danger:hover,
 .todo-type-editor .btn-sm.btn-danger:hover,
 .todo-type-manager .todo-type-btn-primary:hover {
-  background-color: #0052a3;
-  border-color: #0052a3;
+  background-color: #3d7bc4;
+  border-color: #3d7bc4;
 }
 
 .todo-type-editor .btn-secondary {

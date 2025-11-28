@@ -299,14 +299,14 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
   const addCompletionCode = () => {
     setFormData(prev => ({
       ...prev,
-      completionCodes: [...prev.completionCodes, { code: '', label: '' }]
+      completionCodes: [...(prev.completionCodes || []), { code: '', label: '' }]
     }));
   };
 
   const updateCompletionCode = (index, updates) => {
     setFormData(prev => ({
       ...prev,
-      completionCodes: prev.completionCodes.map((code, i) => 
+      completionCodes: (prev.completionCodes || []).map((code, i) => 
         i === index ? { ...code, ...updates } : code
       )
     }));
@@ -315,13 +315,13 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
   const removeCompletionCode = (index) => {
     setFormData(prev => ({
       ...prev,
-      completionCodes: prev.completionCodes.filter((_, i) => i !== index)
+      completionCodes: (prev.completionCodes || []).filter((_, i) => i !== index)
     }));
   };
 
   const moveCompletionCode = (fromIndex, toIndex) => {
     setFormData(prev => {
-      const codes = [...prev.completionCodes];
+      const codes = [...(prev.completionCodes || [])];
       const [moved] = codes.splice(fromIndex, 1);
       codes.splice(toIndex, 0, moved);
       return { ...prev, completionCodes: codes };
