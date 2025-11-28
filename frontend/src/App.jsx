@@ -73,45 +73,49 @@ function App() {
 
   return (
     <div className="app">
-      {/* WMS Background Screenshot */}
-      <div className="wms-background">
-        <picture>
-          <source srcSet="/wms-background.png" type="image/png" />
-          <source srcSet="/wms-background.jpg" type="image/jpeg" />
-          <img 
-            src="/wms-background.png" 
-            alt="WMS Interface" 
-            className="wms-screenshot"
-            onError={(e) => {
-              // Fallback if image doesn't exist yet
-              e.target.style.display = 'none';
-              e.target.parentElement.classList.add('wms-background-fallback');
-            }}
+      {/* WMS Background Screenshot (desktop only) */}
+      {!isMobile && (
+        <>
+          <div className="wms-background">
+            <picture>
+              <source srcSet="/wms-background.png" type="image/png" />
+              <source srcSet="/wms-background.jpg" type="image/jpeg" />
+              <img 
+                src="/wms-background.png" 
+                alt="WMS Interface" 
+                className="wms-screenshot"
+                onError={(e) => {
+                  // Fallback if image doesn't exist yet
+                  e.target.style.display = 'none';
+                  e.target.parentElement.classList.add('wms-background-fallback');
+                }}
+              />
+            </picture>
+          </div>
+
+          {/* Clickable overlay for existing hamburger menu icon in WMS background */}
+          <div 
+            className="wms-hamburger-clickable"
+            onClick={() => setShowMenu(true)}
+            title="Open menu"
           />
-        </picture>
-      </div>
 
-      {/* Clickable overlay for existing hamburger menu icon in WMS background */}
-      <div 
-        className="wms-hamburger-clickable"
-        onClick={() => setShowMenu(true)}
-        title="Open menu"
-      />
-
-      {/* Menu Overlay */}
-      {showMenu && (
-        <MenuOverlay
-          isOpen={showMenu}
-          onClose={() => setShowMenu(false)}
-          onToDoListClick={() => {
-            setShowMenu(false);
-            setShowILPNScreen(true);
-          }}
-          onManageTodoTypesClick={() => {
-            setShowMenu(false);
-            setShowTodoTypeManager(true);
-          }}
-        />
+          {/* Menu Overlay */}
+          {showMenu && (
+            <MenuOverlay
+              isOpen={showMenu}
+              onClose={() => setShowMenu(false)}
+              onToDoListClick={() => {
+                setShowMenu(false);
+                setShowILPNScreen(true);
+              }}
+              onManageTodoTypesClick={() => {
+                setShowMenu(false);
+                setShowTodoTypeManager(true);
+              }}
+            />
+          )}
+        </>
       )}
 
       {/* Todo Badge - Positioned in top-right corner (desktop only) */}
@@ -124,49 +128,53 @@ function App() {
         </div>
       )}
 
-      {/* Toggle button to show To Dos Screen */}
-      <button 
-        className="view-toggle-btn"
-        onClick={() => setShowILPNScreen(true)}
-        style={{
-          position: 'fixed',
-          bottom: '20px',
-          left: '20px',
-          zIndex: 10000,
-          padding: '12px 24px',
-          backgroundColor: '#28A745',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          cursor: 'pointer',
-          fontSize: '14px',
-          fontWeight: 'bold'
-        }}
-      >
-        View To Dos
-      </button>
+      {/* Toggle button to show To Dos Screen (desktop only) */}
+      {!isMobile && (
+        <>
+          <button 
+            className="view-toggle-btn"
+            onClick={() => setShowILPNScreen(true)}
+            style={{
+              position: 'fixed',
+              bottom: '20px',
+              left: '20px',
+              zIndex: 10000,
+              padding: '12px 24px',
+              backgroundColor: '#28A745',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: 'bold'
+            }}
+          >
+            View To Dos
+          </button>
 
-      {/* Button to manage Todo Types */}
-      <button 
-        className="view-toggle-btn"
-        onClick={() => setShowTodoTypeManager(true)}
-        style={{
-          position: 'fixed',
-          bottom: '20px',
-          left: '180px',
-          zIndex: 10000,
-          padding: '12px 24px',
-          backgroundColor: '#6c757d',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          cursor: 'pointer',
-          fontSize: '14px',
-          fontWeight: 'bold'
-        }}
-      >
-        Manage Todo Types
-      </button>
+          {/* Button to manage Todo Types */}
+          <button 
+            className="view-toggle-btn"
+            onClick={() => setShowTodoTypeManager(true)}
+            style={{
+              position: 'fixed',
+              bottom: '20px',
+              left: '180px',
+              zIndex: 10000,
+              padding: '12px 24px',
+              backgroundColor: '#6c757d',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: 'bold'
+            }}
+          >
+            Manage Todo Types
+          </button>
+        </>
+      )}
 
       {/* Todo Type Manager Modal */}
       {showTodoTypeManager && (
