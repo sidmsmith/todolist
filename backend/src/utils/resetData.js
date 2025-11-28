@@ -4,11 +4,21 @@ const path = require('path');
 const DATA_DIR = path.join(__dirname, '../data');
 const SEEDS_DIR = path.join(DATA_DIR, 'seeds');
 
+// Ensure data directory exists (for /tmp in Vercel)
+async function ensureDataDir() {
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+  } catch (err) {
+    console.error('Error creating data directory:', err);
+  }
+}
+
 /**
  * Reset todo.json to default seed data
  */
 async function resetTodos() {
   try {
+    await ensureDataDir();
     const seedPath = path.join(SEEDS_DIR, 'todo.json');
     const targetPath = path.join(DATA_DIR, 'todo.json');
     
@@ -88,6 +98,7 @@ async function resetTodos() {
  */
 async function resetTodoTypes() {
   try {
+    await ensureDataDir();
     const seedPath = path.join(SEEDS_DIR, 'todotype.json');
     const targetPath = path.join(DATA_DIR, 'todotype.json');
     
