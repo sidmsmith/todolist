@@ -46,10 +46,11 @@ app.use((req, res, next) => {
   // If the path or URL starts with /api/todos, strip it
   if ((req.path && req.path.startsWith('/api/todos')) || (req.url && req.url.startsWith('/api/todos'))) {
     // Extract query string if present
+    const urlWithoutQuery = originalUrl.includes('?') ? originalUrl.substring(0, originalUrl.indexOf('?')) : originalUrl;
     const queryString = originalUrl.includes('?') ? originalUrl.substring(originalUrl.indexOf('?')) : '';
     
-    // Remove /api/todos from the path
-    let newPath = originalPath ? originalPath.replace('/api/todos', '') : '/';
+    // Remove /api/todos from the path (handles both /api/todos and /api/todos/:id/...)
+    let newPath = originalPath ? originalPath.replace(/^\/api\/todos/, '') : urlWithoutQuery.replace(/^\/api\/todos/, '');
     if (!newPath || newPath === '') {
       newPath = '/';
     }

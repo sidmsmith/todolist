@@ -180,11 +180,15 @@ router.get('/:id', async (req, res, next) => {
 // Complete a todo
 router.put('/:id/complete', async (req, res, next) => {
   try {
+    console.log('[COMPLETE] Request received:', req.method, req.path, 'ID:', req.params.id, 'Body:', req.body);
     const { completionData, userId } = req.body;
     const todos = await readTodos();
+    console.log('[COMPLETE] Loaded todos, count:', todos.length);
     const todoIndex = todos.findIndex(t => t.id === req.params.id);
+    console.log('[COMPLETE] Todo index:', todoIndex);
 
     if (todoIndex === -1) {
+      console.log('[COMPLETE] Todo not found:', req.params.id);
       return res.status(404).json({ error: 'Todo not found' });
     }
 
@@ -197,13 +201,17 @@ router.put('/:id/complete', async (req, res, next) => {
       todos[todoIndex].completionData = completionData;
     }
 
+    console.log('[COMPLETE] Attempting to write todos...');
     await writeTodos(todos);
+    console.log('[COMPLETE] Successfully wrote todos');
 
     res.json({
       message: 'Todo completed',
       todo: todos[todoIndex]
     });
   } catch (error) {
+    console.error('[COMPLETE] Error:', error);
+    console.error('[COMPLETE] Error stack:', error.stack);
     next(error);
   }
 });
@@ -304,12 +312,16 @@ router.put('/:id/snooze', async (req, res, next) => {
 // Dismiss a todo
 router.put('/:id/dismiss', async (req, res, next) => {
   try {
+    console.log('[DISMISS] Request received:', req.method, req.path, 'ID:', req.params.id, 'Body:', req.body);
     const { dismissalReason, userId } = req.body;
 
     const todos = await readTodos();
+    console.log('[DISMISS] Loaded todos, count:', todos.length);
     const todoIndex = todos.findIndex(t => t.id === req.params.id);
+    console.log('[DISMISS] Todo index:', todoIndex);
 
     if (todoIndex === -1) {
+      console.log('[DISMISS] Todo not found:', req.params.id);
       return res.status(404).json({ error: 'Todo not found' });
     }
 
@@ -322,13 +334,17 @@ router.put('/:id/dismiss', async (req, res, next) => {
       todos[todoIndex].dismissalReason = dismissalReason;
     }
 
+    console.log('[DISMISS] Attempting to write todos...');
     await writeTodos(todos);
+    console.log('[DISMISS] Successfully wrote todos');
 
     res.json({
       message: 'Todo dismissed',
       todo: todos[todoIndex]
     });
   } catch (error) {
+    console.error('[DISMISS] Error:', error);
+    console.error('[DISMISS] Error stack:', error.stack);
     next(error);
   }
 });

@@ -84,7 +84,10 @@ export const useTodoList = () => {
         body: JSON.stringify({ completionData, userId })
       });
       
-      if (! response.ok) throw new Error('Failed to complete todo');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Failed to complete todo: ${response.status} ${response.statusText}`);
+      }
       
       await fetchTodos(); // Refresh list
       return true;
@@ -139,7 +142,10 @@ export const useTodoList = () => {
         body: JSON.stringify({ dismissalReason, userId })
       });
       
-      if (!response. ok) throw new Error('Failed to dismiss todo');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Failed to dismiss todo: ${response.status} ${response.statusText}`);
+      }
       
       await fetchTodos(); // Refresh list
       return true;
