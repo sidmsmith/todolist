@@ -136,22 +136,38 @@ export const useTodoList = () => {
   const dismissTodo = useCallback(async (todoId, dismissalReason = null) => {
     try {
       const userId = getUserId();
-      const response = await fetch(`${API_BASE}/todos/${todoId}/dismiss`, {
+      const url = `${API_BASE}/todos/${todoId}/dismiss`;
+      console.log('[DISMISS] Frontend: Calling', url, 'with body:', { dismissalReason, userId });
+      
+      const response = await fetch(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ dismissalReason, userId })
       });
       
+      console.log('[DISMISS] Frontend: Response status:', response.status, response.statusText);
+      
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(errorData.error || `Failed to dismiss todo: ${response.status} ${response.statusText}`);
+        let errorMessage = `Failed to dismiss todo: ${response.status} ${response.statusText}`;
+        try {
+          const errorData = await response.json();
+          console.log('[DISMISS] Frontend: Error data:', errorData);
+          errorMessage = errorData.error || errorMessage;
+        } catch (parseError) {
+          const text = await response.text();
+          console.log('[DISMISS] Frontend: Response text (not JSON):', text);
+          errorMessage = text || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
       
+      const data = await response.json();
+      console.log('[DISMISS] Frontend: Success:', data);
       await fetchTodos(); // Refresh list
       return true;
     } catch (err) {
+      console.error('[DISMISS] Frontend: Error:', err);
       setError(err.message);
-      console.error('Error dismissing todo:', err);
       return false;
     }
   }, [fetchTodos]);
