@@ -242,7 +242,10 @@ export const TodoSheet = ({
           todo={selectedTodo}
           todoType={getTodoTypeById(selectedTodo.typeId)}
           onComplete={handleCompleteClick}
-          onCancel={() => setShowCompletionModal(false)}
+          onCancel={() => {
+            setShowCompletionModal(false);
+            setSelectedTodo(null);
+          }}
         />
       )}
     </div>

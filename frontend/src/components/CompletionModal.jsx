@@ -255,7 +255,11 @@ export const CompletionModal = ({ isOpen, todo, todoType, onComplete, onCancel }
   };
 
   return (
-    <div className="modal-overlay" onClick={handleCancel}>
+    <div className="modal-overlay" onClick={(e) => {
+      if (e.target === e.currentTarget) {
+        handleCancel();
+      }
+    }}>
       <div className="modal-content" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <h2>Complete: {todo.title}</h2>
