@@ -524,8 +524,9 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
                         )}
                       </div>
                     )}
-                  </div>
-                ))
+                    </div>
+                  )}
+                />
               )}
             </div>
           )}
@@ -543,32 +544,35 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
               {formData.dismissalCodes.length === 0 ? (
                 <p className="empty-state">No dismissal codes. Leave empty to set to "none".</p>
               ) : (
-                formData.dismissalCodes.map((code, index) => (
-                  <div key={index} className="code-builder-row">
-                    <div className="form-group">
-                      <label>Code * {errors[`dismissal_${index}_code`] && <span className="error-text">({errors[`dismissal_${index}_code`]})</span>}</label>
-                      <input
-                        type="text"
-                        value={code.code || ''}
-                        onChange={(e) => updateDismissalCode(index, { code: e.target.value })}
-                        placeholder="e.g., false_alert"
-                        className={errors[`dismissal_${index}_code`] ? 'error' : ''}
-                      />
+                <DragDropList
+                  items={formData.dismissalCodes}
+                  onReorder={moveDismissalCode}
+                  renderItem={(code, index) => (
+                    <div className="code-builder-row">
+                      <div className="form-group">
+                        <label>Code * {errors[`dismissal_${index}_code`] && <span className="error-text">({errors[`dismissal_${index}_code`]})</span>}</label>
+                        <input
+                          type="text"
+                          value={code.code || ''}
+                          onChange={(e) => updateDismissalCode(index, { code: e.target.value })}
+                          placeholder="e.g., false_alert"
+                          className={errors[`dismissal_${index}_code`] ? 'error' : ''}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Label * {errors[`dismissal_${index}_label`] && <span className="error-text">({errors[`dismissal_${index}_label`]})</span>}</label>
+                        <input
+                          type="text"
+                          value={code.label || ''}
+                          onChange={(e) => updateDismissalCode(index, { label: e.target.value })}
+                          placeholder="e.g., False Alarm"
+                          className={errors[`dismissal_${index}_label`] ? 'error' : ''}
+                        />
+                      </div>
+                      <button type="button" onClick={() => removeDismissalCode(index)} className="btn btn-sm btn-danger">
+                        Remove
+                      </button>
                     </div>
-                    <div className="form-group">
-                      <label>Label * {errors[`dismissal_${index}_label`] && <span className="error-text">({errors[`dismissal_${index}_label`]})</span>}</label>
-                      <input
-                        type="text"
-                        value={code.label || ''}
-                        onChange={(e) => updateDismissalCode(index, { label: e.target.value })}
-                        placeholder="e.g., False Alarm"
-                        className={errors[`dismissal_${index}_label`] ? 'error' : ''}
-                      />
-                    </div>
-                    <button type="button" onClick={() => removeDismissalCode(index)} className="btn btn-sm btn-danger">
-                      Remove
-                    </button>
-                  </div>
                   )}
                 />
               )}
@@ -590,32 +594,35 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
               {formData.completionCodes.length === 0 ? (
                 <p className="empty-state">No completion codes. Add at least one for dropdown method.</p>
               ) : (
-                formData.completionCodes.map((code, index) => (
-                  <div key={index} className="code-builder-row">
-                    <div className="form-group">
-                      <label>Code * {errors[`completion_${index}_code`] && <span className="error-text">({errors[`completion_${index}_code`]})</span>}</label>
-                      <input
-                        type="text"
-                        value={code.code || ''}
-                        onChange={(e) => updateCompletionCode(index, { code: e.target.value })}
-                        placeholder="e.g., passed"
-                        className={errors[`completion_${index}_code`] ? 'error' : ''}
-                      />
+                <DragDropList
+                  items={formData.completionCodes}
+                  onReorder={moveCompletionCode}
+                  renderItem={(code, index) => (
+                    <div className="code-builder-row">
+                      <div className="form-group">
+                        <label>Code * {errors[`completion_${index}_code`] && <span className="error-text">({errors[`completion_${index}_code`]})</span>}</label>
+                        <input
+                          type="text"
+                          value={code.code || ''}
+                          onChange={(e) => updateCompletionCode(index, { code: e.target.value })}
+                          placeholder="e.g., passed"
+                          className={errors[`completion_${index}_code`] ? 'error' : ''}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Label * {errors[`completion_${index}_label`] && <span className="error-text">({errors[`completion_${index}_label`]})</span>}</label>
+                        <input
+                          type="text"
+                          value={code.label || ''}
+                          onChange={(e) => updateCompletionCode(index, { label: e.target.value })}
+                          placeholder="e.g., Passed"
+                          className={errors[`completion_${index}_label`] ? 'error' : ''}
+                        />
+                      </div>
+                      <button type="button" onClick={() => removeCompletionCode(index)} className="btn btn-sm btn-danger">
+                        Remove
+                      </button>
                     </div>
-                    <div className="form-group">
-                      <label>Label * {errors[`completion_${index}_label`] && <span className="error-text">({errors[`completion_${index}_label`]})</span>}</label>
-                      <input
-                        type="text"
-                        value={code.label || ''}
-                        onChange={(e) => updateCompletionCode(index, { label: e.target.value })}
-                        placeholder="e.g., Passed"
-                        className={errors[`completion_${index}_label`] ? 'error' : ''}
-                      />
-                    </div>
-                    <button type="button" onClick={() => removeCompletionCode(index)} className="btn btn-sm btn-danger">
-                      Remove
-                    </button>
-                  </div>
                   )}
                 />
               )}
