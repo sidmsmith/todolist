@@ -400,14 +400,17 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
               {formData.completionFields.length === 0 ? (
                 <p className="empty-state">No completion fields. Click "Add Field" to add one.</p>
               ) : (
-                formData.completionFields.map((field, index) => (
-                  <div key={index} className="field-builder-card">
-                    <div className="field-builder-header">
-                      <strong>Field {index + 1}</strong>
-                      <button type="button" onClick={() => removeCompletionField(index)} className="btn btn-sm btn-danger">
-                        Remove
-                      </button>
-                    </div>
+                <DragDropList
+                  items={formData.completionFields}
+                  onReorder={moveCompletionField}
+                  renderItem={(field, index) => (
+                    <div className="field-builder-card">
+                      <div className="field-builder-header">
+                        <strong>Field {index + 1}</strong>
+                        <button type="button" onClick={() => removeCompletionField(index)} className="btn btn-sm btn-danger">
+                          Remove
+                        </button>
+                      </div>
 
                     <div className="form-row">
                       <div className="form-group">
