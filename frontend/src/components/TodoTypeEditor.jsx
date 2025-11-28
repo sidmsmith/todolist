@@ -5,6 +5,7 @@ const DragDropList = ({ items, onReorder, renderItem }) => {
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
   const [dropPosition, setDropPosition] = useState(null); // 'above' or 'below'
+  const lastDragOverRef = React.useRef({ index: null, position: null });
 
   const handleDragStart = (e, index) => {
     setDraggedIndex(index);
@@ -14,32 +15,64 @@ const DragDropList = ({ items, onReorder, renderItem }) => {
 
   const handleDragOver = (e, index) => {
     e.preventDefault();
+    e.stopPropagation();
     e.dataTransfer.dropEffect = 'move';
+    
     if (draggedIndex !== null && draggedIndex !== index) {
       const rect = e.currentTarget.getBoundingClientRect();
       const mouseY = e.clientY;
-      const itemCenterY = rect.top + rect.height / 2;
-      const position = mouseY < itemCenterY ? 'above' : 'below';
+      const itemHeight = rect.height;
+      const itemTop = rect.top;
       
-      setDragOverIndex(index);
-      setDropPosition(position);
+      // Create a larger drop zone - use 40% of card height as threshold
+      const threshold = itemHeight * 0.4;
+      const upperThreshold = itemTop + threshold;
+      const lowerThreshold = itemTop + itemHeight - threshold;
+      
+      let position;
+      if (mouseY < upperThreshold) {
+        position = 'above';
+      } else if (mouseY > lowerThreshold) {
+        position = 'below';
+      } else {
+        // In the middle zone, keep the current position or default to 'below'
+        position = lastDragOverRef.current.index === index 
+          ? lastDragOverRef.current.position 
+          : 'below';
+      }
+      
+      // Only update state if it actually changed to prevent shaking
+      if (dragOverIndex !== index || dropPosition !== position) {
+        lastDragOverRef.current = { index, position };
+        setDragOverIndex(index);
+        setDropPosition(position);
+      }
     }
   };
 
   const handleDragLeave = (e) => {
-    // Only clear if we're actually leaving the item (not just moving to a child)
-    const rect = e.currentTarget.getBoundingClientRect();
-    const mouseY = e.clientY;
-    const mouseX = e.clientX;
-    
-    if (mouseY < rect.top || mouseY > rect.bottom || mouseX < rect.left || mouseX > rect.right) {
-      setDragOverIndex(null);
-      setDropPosition(null);
+    // Use relatedTarget to check if we're actually leaving (not just moving to a child)
+    const relatedTarget = e.relatedTarget;
+    if (!relatedTarget || !e.currentTarget.contains(relatedTarget)) {
+      // Only clear if we're actually leaving the item area
+      const rect = e.currentTarget.getBoundingClientRect();
+      const mouseY = e.clientY;
+      const mouseX = e.clientX;
+      
+      // Add a buffer zone to prevent flickering
+      const buffer = 10;
+      if (mouseY < rect.top - buffer || mouseY > rect.bottom + buffer || 
+          mouseX < rect.left - buffer || mouseX > rect.right + buffer) {
+        setDragOverIndex(null);
+        setDropPosition(null);
+        lastDragOverRef.current = { index: null, position: null };
+      }
     }
   };
 
   const handleDrop = (e, dropIndex) => {
     e.preventDefault();
+    e.stopPropagation();
     if (draggedIndex !== null && draggedIndex !== dropIndex) {
       let targetIndex;
       
@@ -64,25 +97,27 @@ const DragDropList = ({ items, onReorder, renderItem }) => {
     setDraggedIndex(null);
     setDragOverIndex(null);
     setDropPosition(null);
+    lastDragOverRef.current = { index: null, position: null };
   };
 
   const handleDragEnd = () => {
     setDraggedIndex(null);
     setDragOverIndex(null);
     setDropPosition(null);
+    lastDragOverRef.current = { index: null, position: null };
   };
 
   return (
-    <>
+    <div className="drag-drop-list-container">
       {items.map((item, index) => {
         const showGapAbove = dragOverIndex === index && dropPosition === 'above' && draggedIndex !== index;
         const showGapBelow = dragOverIndex === index && dropPosition === 'below' && draggedIndex !== index;
         
         return (
           <React.Fragment key={index}>
-            {showGapAbove && (
-              <div className="drag-drop-gap" style={{ height: '60px', marginBottom: '1rem' }} />
-            )}
+            <div 
+              className={`drag-drop-gap-placeholder ${showGapAbove ? 'active' : ''}`}
+            />
             <div
               draggable
               onDragStart={(e) => handleDragStart(e, index)}
@@ -94,13 +129,13 @@ const DragDropList = ({ items, onReorder, renderItem }) => {
             >
               {renderItem(item, index)}
             </div>
-            {showGapBelow && (
-              <div className="drag-drop-gap" style={{ height: '60px', marginTop: '1rem' }} />
-            )}
+            <div 
+              className={`drag-drop-gap-placeholder ${showGapBelow ? 'active' : ''}`}
+            />
           </React.Fragment>
         );
       })}
-    </>
+    </div>
   );
 };
 
