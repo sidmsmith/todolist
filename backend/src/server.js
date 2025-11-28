@@ -16,11 +16,14 @@ app.use(express.json());
 app.use('/api/todos', todoRoutes);
 app.use('/api/todo-types', todoTypeRoutes);
 
-// Reset routes (only for development/testing)
+// Reset routes (enabled in production if ENABLE_RESET is set)
 if (process.env.NODE_ENV !== 'production' || process.env.ENABLE_RESET === 'true') {
   const resetRoutes = require('./routes/reset');
   app.use('/api/reset', resetRoutes);
   console.log('🔄 Reset endpoint available at: POST /api/reset');
+  if (process.env.ENABLE_RESET === 'true') {
+    console.log('⚠️  Reset is ENABLED in production. Use with caution!');
+  }
 }
 
 
