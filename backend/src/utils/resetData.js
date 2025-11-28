@@ -1,8 +1,12 @@
 const fs = require('fs').promises;
 const path = require('path');
 
-const DATA_DIR = path.join(__dirname, '../data');
-const SEEDS_DIR = path.join(DATA_DIR, 'seeds');
+// In Vercel, use /tmp for writes (read-only filesystem except /tmp)
+// In local dev, use the project data directory
+const IS_VERCEL = process.env.VERCEL === '1' || process.env.VERCEL_ENV;
+const DATA_DIR = IS_VERCEL ? '/tmp/todo-data' : path.join(__dirname, '../data');
+const SOURCE_DATA_DIR = path.join(__dirname, '../data'); // Always read from source
+const SEEDS_DIR = path.join(SOURCE_DATA_DIR, 'seeds'); // Seeds are always in source
 
 // Ensure data directory exists (for /tmp in Vercel)
 async function ensureDataDir() {
