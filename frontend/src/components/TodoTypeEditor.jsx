@@ -145,7 +145,7 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
     }
 
     // Validate completion fields
-    formData.completionFields.forEach((field, index) => {
+    (formData.completionFields || []).forEach((field, index) => {
       if (!field.fieldName?.trim()) {
         newErrors[`field_${index}_name`] = 'Field name is required';
       }
@@ -158,7 +158,7 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
     });
 
     // Validate dismissal codes
-    formData.dismissalCodes.forEach((code, index) => {
+    (formData.dismissalCodes || []).forEach((code, index) => {
       if (!code.code?.trim()) {
         newErrors[`dismissal_${index}_code`] = 'Code is required';
       }
@@ -172,7 +172,7 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
       if (!formData.completionCodes || formData.completionCodes.length === 0) {
         newErrors.completionCodes = 'Completion codes are required for dropdown method';
       } else {
-        formData.completionCodes.forEach((code, index) => {
+        (formData.completionCodes || []).forEach((code, index) => {
           if (!code.code?.trim()) {
             newErrors[`completion_${index}_code`] = 'Code is required';
           }
@@ -194,7 +194,7 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
 
     const dataToSave = {
       ...formData,
-      dismissalCodes: formData.dismissalCodes.length > 0 ? formData.dismissalCodes : 'none'
+      dismissalCodes: (formData.dismissalCodes && formData.dismissalCodes.length > 0) ? formData.dismissalCodes : 'none'
     };
 
     onSave(dataToSave);
@@ -203,7 +203,7 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
   const addCompletionField = () => {
     setFormData(prev => ({
       ...prev,
-      completionFields: [...prev.completionFields, {
+      completionFields: [...(prev.completionFields || []), {
         fieldName: '',
         type: 'text',
         label: '',
@@ -215,7 +215,7 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
   const updateCompletionField = (index, updates) => {
     setFormData(prev => ({
       ...prev,
-      completionFields: prev.completionFields.map((field, i) => 
+      completionFields: (prev.completionFields || []).map((field, i) => 
         i === index ? { ...field, ...updates } : field
       )
     }));
@@ -224,14 +224,23 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
   const removeCompletionField = (index) => {
     setFormData(prev => ({
       ...prev,
-      completionFields: prev.completionFields.filter((_, i) => i !== index)
+      completionFields: (prev.completionFields || []).filter((_, i) => i !== index)
     }));
+  };
+
+  const moveCompletionField = (fromIndex, toIndex) => {
+    setFormData(prev => {
+      const fields = [...(prev.completionFields || [])];
+      const [moved] = fields.splice(fromIndex, 1);
+      fields.splice(toIndex, 0, moved);
+      return { ...prev, completionFields: fields };
+    });
   };
 
   const addFieldOption = (fieldIndex) => {
     setFormData(prev => ({
       ...prev,
-      completionFields: prev.completionFields.map((field, i) => 
+      completionFields: (prev.completionFields || []).map((field, i) => 
         i === fieldIndex 
           ? { ...field, options: [...(field.options || []), ''] }
           : field
@@ -242,11 +251,11 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
   const updateFieldOption = (fieldIndex, optionIndex, value) => {
     setFormData(prev => ({
       ...prev,
-      completionFields: prev.completionFields.map((field, i) => 
+      completionFields: (prev.completionFields || []).map((field, i) => 
         i === fieldIndex 
           ? { 
               ...field, 
-              options: field.options.map((opt, oi) => oi === optionIndex ? value : opt)
+              options: (field.options || []).map((opt, oi) => oi === optionIndex ? value : opt)
             }
           : field
       )
@@ -256,9 +265,9 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
   const removeFieldOption = (fieldIndex, optionIndex) => {
     setFormData(prev => ({
       ...prev,
-      completionFields: prev.completionFields.map((field, i) => 
+      completionFields: (prev.completionFields || []).map((field, i) => 
         i === fieldIndex 
-          ? { ...field, options: field.options.filter((_, oi) => oi !== optionIndex) }
+          ? { ...field, options: (field.options || []).filter((_, oi) => oi !== optionIndex) }
           : field
       )
     }));
@@ -267,14 +276,14 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
   const addDismissalCode = () => {
     setFormData(prev => ({
       ...prev,
-      dismissalCodes: [...prev.dismissalCodes, { code: '', label: '' }]
+      dismissalCodes: [...(prev.dismissalCodes || []), { code: '', label: '' }]
     }));
   };
 
   const updateDismissalCode = (index, updates) => {
     setFormData(prev => ({
       ...prev,
-      dismissalCodes: prev.dismissalCodes.map((code, i) => 
+      dismissalCodes: (prev.dismissalCodes || []).map((code, i) => 
         i === index ? { ...code, ...updates } : code
       )
     }));
@@ -283,13 +292,13 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
   const removeDismissalCode = (index) => {
     setFormData(prev => ({
       ...prev,
-      dismissalCodes: prev.dismissalCodes.filter((_, i) => i !== index)
+      dismissalCodes: (prev.dismissalCodes || []).filter((_, i) => i !== index)
     }));
   };
 
   const moveDismissalCode = (fromIndex, toIndex) => {
     setFormData(prev => {
-      const codes = [...prev.dismissalCodes];
+      const codes = [...(prev.dismissalCodes || [])];
       const [moved] = codes.splice(fromIndex, 1);
       codes.splice(toIndex, 0, moved);
       return { ...prev, dismissalCodes: codes };
@@ -454,11 +463,11 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
                 </button>
               </div>
 
-              {formData.completionFields.length === 0 ? (
+              {(formData.completionFields || []).length === 0 ? (
                 <p className="empty-state">No completion fields. Click "Add Field" to add one.</p>
               ) : (
                 <DragDropList
-                  items={formData.completionFields}
+                  items={formData.completionFields || []}
                   onReorder={moveCompletionField}
                   renderItem={(field, index) => (
                     <div className="field-builder-card">
@@ -598,11 +607,11 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
                 </button>
               </div>
 
-              {formData.dismissalCodes.length === 0 ? (
+              {(formData.dismissalCodes || []).length === 0 ? (
                 <p className="empty-state">No dismissal codes. Leave empty to set to "none".</p>
               ) : (
                 <DragDropList
-                  items={formData.dismissalCodes}
+                  items={formData.dismissalCodes || []}
                   onReorder={moveDismissalCode}
                   renderItem={(code, index) => (
                     <div className="code-builder-row">
@@ -648,11 +657,11 @@ export const TodoTypeEditor = ({ isOpen, onClose, todoType, onSave }) => {
 
               {errors.completionCodes && <p className="error-text">{errors.completionCodes}</p>}
 
-              {formData.completionCodes.length === 0 ? (
+              {(formData.completionCodes || []).length === 0 ? (
                 <p className="empty-state">No completion codes. Add at least one for dropdown method.</p>
               ) : (
                 <DragDropList
-                  items={formData.completionCodes}
+                  items={formData.completionCodes || []}
                   onReorder={moveCompletionCode}
                   renderItem={(code, index) => (
                     <div className="code-builder-row">
