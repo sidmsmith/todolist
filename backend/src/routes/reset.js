@@ -5,19 +5,20 @@ const { resetAll, resetTodos, resetTodoTypes } = require('../utils/resetData');
 // Only allow reset in development mode or with a secret key
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const RESET_SECRET = process.env.RESET_SECRET || 'dev-reset-secret';
+const ENABLE_RESET = process.env.ENABLE_RESET === 'true';
 
 // Reset all data to defaults
 router.post('/', async (req, res, next) => {
   try {
-    // Check for secret key in production
-    if (!isDevelopment) {
-      const providedSecret = req.headers['x-reset-secret'] || req.body.secret;
-      if (providedSecret !== RESET_SECRET) {
-        return res.status(403).json({ 
-          error: 'Reset not allowed. Provide valid secret key in x-reset-secret header or body.secret' 
-        });
-      }
-    }
+    // Check for secret key in production (commented out for easy testing when ENABLE_RESET=true)
+    // if (!isDevelopment && !ENABLE_RESET) {
+    //   const providedSecret = req.headers['x-reset-secret'] || req.body.secret;
+    //   if (providedSecret !== RESET_SECRET) {
+    //     return res.status(403).json({ 
+    //       error: 'Reset not allowed. Provide valid secret key in x-reset-secret header or body.secret' 
+    //     });
+    //   }
+    // }
 
     await resetAll();
     
@@ -34,12 +35,13 @@ router.post('/', async (req, res, next) => {
 // Reset only todos
 router.post('/todos', async (req, res, next) => {
   try {
-    if (!isDevelopment) {
-      const providedSecret = req.headers['x-reset-secret'] || req.body.secret;
-      if (providedSecret !== RESET_SECRET) {
-        return res.status(403).json({ error: 'Reset not allowed' });
-      }
-    }
+    // Secret check commented out for easy testing when ENABLE_RESET=true
+    // if (!isDevelopment && !ENABLE_RESET) {
+    //   const providedSecret = req.headers['x-reset-secret'] || req.body.secret;
+    //   if (providedSecret !== RESET_SECRET) {
+    //     return res.status(403).json({ error: 'Reset not allowed' });
+    //   }
+    // }
 
     await resetTodos();
     
@@ -56,12 +58,13 @@ router.post('/todos', async (req, res, next) => {
 // Reset only todo types
 router.post('/todo-types', async (req, res, next) => {
   try {
-    if (!isDevelopment) {
-      const providedSecret = req.headers['x-reset-secret'] || req.body.secret;
-      if (providedSecret !== RESET_SECRET) {
-        return res.status(403).json({ error: 'Reset not allowed' });
-      }
-    }
+    // Secret check commented out for easy testing when ENABLE_RESET=true
+    // if (!isDevelopment && !ENABLE_RESET) {
+    //   const providedSecret = req.headers['x-reset-secret'] || req.body.secret;
+    //   if (providedSecret !== RESET_SECRET) {
+    //     return res.status(403).json({ error: 'Reset not allowed' });
+    //   }
+    // }
 
     await resetTodoTypes();
     
