@@ -15,6 +15,10 @@
       "destination": "/api/todo-types"
     },
     {
+      "source": "/api/reset/:path*",
+      "destination": "/api/reset"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
