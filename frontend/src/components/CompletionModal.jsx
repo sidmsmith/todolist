@@ -51,8 +51,24 @@ export const CompletionModal = ({ isOpen, todo, todoType, onComplete, onCancel }
       alert('Please fill in all required fields before completing.');
       return;
     }
-    onComplete(formData);
-  }, [validateForm, onComplete, formData]);
+    
+    // Strip out photo and signature data for testing (to avoid request size limits)
+    // Users can see the photo/signature was captured, but it won't be saved
+    const submissionData = { ...formData };
+    if (todoType?.completionFields) {
+      todoType.completionFields.forEach(field => {
+        if (field.type === 'photo' || field.type === 'signature') {
+          if (submissionData[field.fieldName]) {
+            // Replace with a placeholder to indicate it was captured but not saved
+            submissionData[field.fieldName] = '[Photo/Signature captured but not saved - testing mode]';
+            console.log(`[TESTING] ${field.type} captured for field "${field.fieldName}" but not saved to avoid size limits`);
+          }
+        }
+      });
+    }
+    
+    onComplete(submissionData);
+  }, [validateForm, onComplete, formData, todoType]);
 
   // Handle Enter key to submit form
   useEffect(() => {

@@ -86,9 +86,16 @@ export const SignaturePad = ({ field, value, onChange, required }) => {
             backgroundColor: '#fff'
           }}
         />
-        <button type="button" onClick={clearSignature} style={{ marginTop: '8px', padding: '4px 12px' }}>
-          Clear
-        </button>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
+          <button type="button" onClick={clearSignature} style={{ padding: '4px 12px' }}>
+            Clear
+          </button>
+          {value && (
+            <div style={{ fontSize: '12px', color: '#666', fontStyle: 'italic' }}>
+              ✍️ Signature captured (not saved - testing mode)
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -37,6 +37,9 @@ export const PhotoUpload = ({ field, value, onChange, required }) => {
         {value && (
           <div>
             <img src={value} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: '200px', border: '1px solid #ccc', borderRadius: '4px' }} />
+            <div style={{ fontSize: '12px', color: '#666', marginTop: '4px', fontStyle: 'italic' }}>
+              📸 Photo captured (not saved - testing mode)
+            </div>
           </div>
         )}
       </div>
