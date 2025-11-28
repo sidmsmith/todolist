@@ -25,7 +25,13 @@ export const TodoTypeManager = ({ isOpen, onClose }) => {
       const response = await fetch(`${API_BASE}/todo-types`);
       if (!response.ok) throw new Error('Failed to fetch todo types');
       const data = await response.json();
-      setTodoTypes(data.data || []);
+      // Sort by name alphabetically
+      const sorted = (data.data || []).sort((a, b) => {
+        const nameA = (a.name || '').toLowerCase();
+        const nameB = (b.name || '').toLowerCase();
+        return nameA.localeCompare(nameB);
+      });
+      setTodoTypes(sorted);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -114,8 +120,8 @@ export const TodoTypeManager = ({ isOpen, onClose }) => {
               <table className="todo-types-table">
                 <thead>
                   <tr className="table-header-row">
-                    <th>ID</th>
                     <th>Name</th>
+                    <th>ID</th>
                     <th>Priority</th>
                     <th>Completion Method</th>
                     <th>Actions</th>
@@ -124,8 +130,8 @@ export const TodoTypeManager = ({ isOpen, onClose }) => {
                 <tbody>
                   {todoTypes.map(type => (
                     <tr key={type.id}>
-                      <td><code>{type.id}</code></td>
                       <td>{type.name}</td>
+                      <td><code>{type.id}</code></td>
                       <td>{type.priority}</td>
                       <td>{type.completionMethod}</td>
                       <td>
