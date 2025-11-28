@@ -170,5 +170,36 @@
     ],
     "dismissalCodes": "none",
     "completionCodes": []
+  },
+  {
+    "id": "labor_monitoring",
+    "name": "Labor Monitoring",
+    "priority": 3,
+    "completionMethod": "modal",
+    "completionFields": [
+      {
+        "fieldName": "comments",
+        "type": "textarea",
+        "label": "Comments",
+        "required": false
+      },
+      {
+        "fieldName": "signature",
+        "type": "signature",
+        "label": "Signature",
+        "required": true
+      }
+    ],
+    "dismissalCodes": [
+      {
+        "code": "false_alert",
+        "label": "False Alarm"
+      },
+      {
+        "code": "other",
+        "label": "Other"
+      }
+    ],
+    "completionCodes": []
   }
 ]

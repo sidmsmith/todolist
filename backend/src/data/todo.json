@@ -6,8 +6,8 @@
     "description": "Temperature out of range in cold storage",
     "category": "CRITICAL",
     "priority": 1,
-    "dueTime": "2025-11-27T23:46:17.333Z",
-    "createdAt": "2025-11-27T23:19:17.333Z",
+    "dueTime": "2025-11-28T00:11:19.078Z",
+    "createdAt": "2025-11-27T23:44:19.078Z",
     "assignmentGroup": "ALL",
     "status": "Open",
     "completionMethod": "none",
@@ -25,8 +25,8 @@
     "description": "Team sync meeting - 10:00 AM",
     "category": "HIGH",
     "priority": 3,
-    "dueTime": "2025-11-28T00:19:17.333Z",
-    "createdAt": "2025-11-27T23:19:17.333Z",
+    "dueTime": "2025-11-28T00:44:19.078Z",
+    "createdAt": "2025-11-27T23:44:19.078Z",
     "assignmentGroup": "ALL",
     "status": "Open",
     "completionMethod": "auto",
@@ -42,21 +42,15 @@
     "description": "Safety observation - overdue 18 minutes",
     "category": "HIGH",
     "priority": 2,
-    "dueTime": "2025-11-28T00:31:17.333Z",
-    "createdAt": "2025-11-27T23:19:17.333Z",
+    "dueTime": "2025-11-28T00:56:19.078Z",
+    "createdAt": "2025-11-27T23:44:19.078Z",
     "assignmentGroup": "ALL",
     "status": "Open",
     "completionMethod": "none",
     "details": {
       "externalLink": "/observations/obs_12346"
     },
-    "snoozes": [
-      {
-        "userId": "Miles Atwater",
-        "snoozedUntil": "2025-11-28T02:03:52.592Z",
-        "snoozedAt": "2025-11-28T01:33:52.592Z"
-      }
-    ]
+    "snoozes": []
   },
   {
     "id": "todo_004",
@@ -65,8 +59,8 @@
     "description": "Safety observation",
     "category": "HIGH",
     "priority": 2,
-    "dueTime": "2025-11-28T01:04:17.333Z",
-    "createdAt": "2025-11-27T23:19:17.333Z",
+    "dueTime": "2025-11-28T01:29:19.078Z",
+    "createdAt": "2025-11-27T23:44:19.078Z",
     "assignmentGroup": "ALL",
     "status": "Open",
     "completionMethod": "none",
@@ -82,8 +76,8 @@
     "description": "Safety observation - overdue 5 minutes",
     "category": "HIGH",
     "priority": 2,
-    "dueTime": "2025-11-28T01:44:17.333Z",
-    "createdAt": "2025-11-27T23:19:17.333Z",
+    "dueTime": "2025-11-28T02:09:19.078Z",
+    "createdAt": "2025-11-27T23:44:19.078Z",
     "assignmentGroup": "ALL",
     "status": "Open",
     "completionMethod": "none",
@@ -100,8 +94,8 @@
     "description": "Order cutoff approaching - 11 minutes remaining",
     "category": "HIGH",
     "priority": 2,
-    "dueTime": "2025-11-27T23:30:17.333Z",
-    "createdAt": "2025-11-27T23:19:17.333Z",
+    "dueTime": "2025-11-27T23:55:19.078Z",
+    "createdAt": "2025-11-27T23:44:19.078Z",
     "assignmentGroup": "ALL",
     "status": "Open",
     "completionMethod": "none",
@@ -119,8 +113,8 @@
     "description": "Order cutoff approaching - 27 minutes remaining",
     "category": "HIGH",
     "priority": 2,
-    "dueTime": "2025-11-27T23:46:17.333Z",
-    "createdAt": "2025-11-27T23:19:17.333Z",
+    "dueTime": "2025-11-28T00:11:19.078Z",
+    "createdAt": "2025-11-27T23:44:19.078Z",
     "assignmentGroup": "ALL",
     "status": "Open",
     "completionMethod": "none",
@@ -138,15 +132,15 @@
     "description": "Restroom cleanliness inspection - overdue 2h 14m",
     "category": "MEDIUM",
     "priority": 2,
-    "dueTime": "2025-11-28T00:19:17.333Z",
-    "createdAt": "2025-11-27T23:19:17.333Z",
+    "dueTime": "2025-11-28T00:44:19.078Z",
+    "createdAt": "2025-11-27T23:44:19.078Z",
     "assignmentGroup": "ALL",
     "status": "Snoozed",
     "snoozes": [
       {
         "userId": "Miles Atwater",
-        "snoozedUntil": "2025-11-28T23:01:31.189Z",
-        "snoozedAt": "2025-11-28T22:46:31.189Z"
+        "snoozedUntil": "2025-11-28T23:26:32.934Z",
+        "snoozedAt": "2025-11-28T23:11:32.934Z"
       }
     ],
     "completionMethod": "modal",
@@ -159,15 +153,15 @@
     "description": "General facility safety inspection",
     "category": "MEDIUM",
     "priority": 2,
-    "dueTime": "2025-11-28T05:49:17.333Z",
-    "createdAt": "2025-11-27T23:19:17.333Z",
+    "dueTime": "2025-11-28T06:14:19.078Z",
+    "createdAt": "2025-11-27T23:44:19.078Z",
     "assignmentGroup": "ALL",
     "status": "Snoozed",
     "snoozes": [
       {
         "userId": "Miles Atwater",
-        "snoozedUntil": "2025-11-28T05:49:17.333Z",
-        "snoozedAt": "2025-11-28T05:34:17.333Z"
+        "snoozedUntil": "2025-11-28T06:14:19.078Z",
+        "snoozedAt": "2025-11-28T05:59:19.078Z"
       }
     ],
     "completionMethod": "modal",
@@ -180,8 +174,8 @@
     "description": "Monthly maintenance check on Forklift #3",
     "category": "MEDIUM",
     "priority": 3,
-    "dueTime": "2025-11-28T23:19:17.333Z",
-    "createdAt": "2025-11-27T23:19:17.333Z",
+    "dueTime": "2025-11-28T23:44:19.078Z",
+    "createdAt": "2025-11-27T23:44:19.078Z",
     "assignmentGroup": "ALL",
     "status": "Open",
     "completionMethod": "modal",
@@ -195,8 +189,8 @@
     "description": "Quality inspection for batch QC-2025-001",
     "category": "HIGH",
     "priority": 2,
-    "dueTime": "2025-11-28T04:19:17.333Z",
-    "createdAt": "2025-11-27T23:19:17.333Z",
+    "dueTime": "2025-11-28T04:44:19.078Z",
+    "createdAt": "2025-11-27T23:44:19.078Z",
     "assignmentGroup": "ALL",
     "status": "Open",
     "completionMethod": "dropdown",
@@ -213,8 +207,8 @@
     "description": "Location A1AC0102 has a spill",
     "category": "MEDIUM",
     "priority": 4,
-    "dueTime": "2025-11-28T04:19:17.333Z",
-    "createdAt": "2025-11-27T23:19:17.333Z",
+    "dueTime": "2025-11-28T04:44:19.078Z",
+    "createdAt": "2025-11-27T23:44:19.078Z",
     "assignmentGroup": "ALL",
     "status": "Open",
     "completionMethod": "modal",
@@ -231,8 +225,8 @@
     "description": "Full inspection of cold storage zone including temperature monitoring, item verification, and photo documentation",
     "category": "HIGH",
     "priority": 2,
-    "dueTime": "2025-11-28T03:40:09.729Z",
-    "createdAt": "2025-11-27T23:19:17.333Z",
+    "dueTime": "2025-11-28T04:05:11.474Z",
+    "createdAt": "2025-11-27T23:44:19.078Z",
     "assignmentGroup": "ALL",
     "status": "Open",
     "completionMethod": "modal",
@@ -250,8 +244,8 @@
     "description": "Receiving dock has been identified as messy",
     "category": "LOW",
     "priority": 3,
-    "dueTime": "2025-11-28T03:40:09.729Z",
-    "createdAt": "2025-11-27T23:19:17.333Z",
+    "dueTime": "2025-11-28T04:05:11.474Z",
+    "createdAt": "2025-11-27T23:44:19.078Z",
     "assignmentGroup": "ALL",
     "status": "Open",
     "completionMethod": "modal",
@@ -259,5 +253,27 @@
       "zone": "Receiving Dock"
     },
     "snoozes": []
+  },
+  {
+    "id": "todo_015",
+    "typeId": "labor_monitoring",
+    "title": "Labor Monitoring: Zone 1",
+    "description": "Zone 1 is currently 1 hour behin",
+    "category": "CRITICAL",
+    "priority": 2,
+    "dueTime": "2025-11-28T05:14:19.078Z",
+    "createdAt": "2025-11-27T23:44:19.078Z",
+    "assignmentGroup": "ALL",
+    "status": "Completed",
+    "completionMethod": "modal",
+    "details": {
+      "location": "Aisle 3, Rack 12"
+    },
+    "snoozes": [],
+    "completedAt": "2025-11-28T01:46:10.616Z",
+    "completedBy": "Miles Atwater",
+    "completionData": {
+      "signature": "data:image/png;base64,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"
+    }
   }
 ]

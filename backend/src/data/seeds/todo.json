@@ -246,6 +246,22 @@
       "zone": "Receiving Dock"
     },
     "snoozes": []
+  },
+   {
+    "id": "todo_015",
+    "typeId": "labor_monitoring",
+    "title": "Labor Monitoring: Zone 1",
+    "description": "Zone 1 is currently 1 hour behind",
+    "category": "CRITICAL",
+    "priority": 1,
+    "dueTime": "2025-11-26T13:30:00Z",
+    "createdAt": "2025-11-26T08:00:00Z",
+    "assignmentGroup": "ALL",
+    "status": "Open",
+    "completionMethod": "modal",
+    "details": {
+			      "location": "Zone 1"
+	}
   }
 ]
 
