@@ -1344,6 +1344,14 @@ body {
   box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.4);
 }
 
+.drag-drop-gap {
+  background: #cfe2ff;
+  border: 2px dashed #0056b3;
+  border-radius: var(--border-radius);
+  opacity: 0.7;
+  transition: all 0.2s;
+}
+
 .option-row {
   display: flex;
   gap: 0.5rem;

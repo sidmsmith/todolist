@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 const DragDropList = ({ items, onReorder, renderItem }) => {
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
+  const [dropPosition, setDropPosition] = useState(null); // 'above' or 'below'
 
   const handleDragStart = (e, index) => {
     setDraggedIndex(index);
@@ -15,44 +16,90 @@ const DragDropList = ({ items, onReorder, renderItem }) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     if (draggedIndex !== null && draggedIndex !== index) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const mouseY = e.clientY;
+      const itemCenterY = rect.top + rect.height / 2;
+      const position = mouseY < itemCenterY ? 'above' : 'below';
+      
       setDragOverIndex(index);
+      setDropPosition(position);
     }
   };
 
-  const handleDragLeave = () => {
-    setDragOverIndex(null);
+  const handleDragLeave = (e) => {
+    // Only clear if we're actually leaving the item (not just moving to a child)
+    const rect = e.currentTarget.getBoundingClientRect();
+    const mouseY = e.clientY;
+    const mouseX = e.clientX;
+    
+    if (mouseY < rect.top || mouseY > rect.bottom || mouseX < rect.left || mouseX > rect.right) {
+      setDragOverIndex(null);
+      setDropPosition(null);
+    }
   };
 
   const handleDrop = (e, dropIndex) => {
     e.preventDefault();
     if (draggedIndex !== null && draggedIndex !== dropIndex) {
-      onReorder(draggedIndex, dropIndex);
+      let targetIndex;
+      
+      if (dropPosition === 'above') {
+        // Dropping above the target item
+        targetIndex = dropIndex;
+        // If dragging down, we need to account for the removed item
+        if (draggedIndex < dropIndex) {
+          targetIndex = dropIndex - 1;
+        }
+      } else {
+        // Dropping below the target item
+        targetIndex = dropIndex + 1;
+        // If dragging down, we need to account for the removed item
+        if (draggedIndex < dropIndex) {
+          targetIndex = dropIndex;
+        }
+      }
+      
+      onReorder(draggedIndex, targetIndex);
     }
     setDraggedIndex(null);
     setDragOverIndex(null);
+    setDropPosition(null);
   };
 
   const handleDragEnd = () => {
     setDraggedIndex(null);
     setDragOverIndex(null);
+    setDropPosition(null);
   };
 
   return (
     <>
-      {items.map((item, index) => (
-        <div
-          key={index}
-          draggable
-          onDragStart={(e) => handleDragStart(e, index)}
-          onDragOver={(e) => handleDragOver(e, index)}
-          onDragLeave={handleDragLeave}
-          onDrop={(e) => handleDrop(e, index)}
-          onDragEnd={handleDragEnd}
-          className={`${draggedIndex === index ? 'dragging' : ''} ${dragOverIndex === index ? 'drag-over' : ''}`}
-        >
-          {renderItem(item, index)}
-        </div>
-      ))}
+      {items.map((item, index) => {
+        const showGapAbove = dragOverIndex === index && dropPosition === 'above' && draggedIndex !== index;
+        const showGapBelow = dragOverIndex === index && dropPosition === 'below' && draggedIndex !== index;
+        
+        return (
+          <React.Fragment key={index}>
+            {showGapAbove && (
+              <div className="drag-drop-gap" style={{ height: '60px', marginBottom: '1rem' }} />
+            )}
+            <div
+              draggable
+              onDragStart={(e) => handleDragStart(e, index)}
+              onDragOver={(e) => handleDragOver(e, index)}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDrop(e, index)}
+              onDragEnd={handleDragEnd}
+              className={`${draggedIndex === index ? 'dragging' : ''} ${dragOverIndex === index ? 'drag-over' : ''}`}
+            >
+              {renderItem(item, index)}
+            </div>
+            {showGapBelow && (
+              <div className="drag-drop-gap" style={{ height: '60px', marginTop: '1rem' }} />
+            )}
+          </React.Fragment>
+        );
+      })}
     </>
   );
 };
