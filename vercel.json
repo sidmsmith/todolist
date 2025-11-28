@@ -7,16 +7,8 @@
   "framework": null,
   "rewrites": [
     {
-      "source": "/api/todos/(.*)",
-      "destination": "/api/todos/$1"
-    },
-    {
-      "source": "/api/todo-types",
-      "destination": "/api/todo-types"
-    },
-    {
       "source": "/api/(.*)",
-      "destination": "/api/index.py"
+      "destination": "/api/index.js"
     },
     {
       "source": "/(.*)",
