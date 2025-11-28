@@ -40,8 +40,10 @@ app.use((req, res, next) => {
 
 // Strip /api/todos prefix from the path so the router sees paths like /, /:id, etc.
 app.use((req, res, next) => {
-  const originalUrl = req.url;
-  const originalPath = req.path;
+  const originalUrl = req.url || '';
+  const originalPath = req.path || '';
+  
+  console.log('[API/TODOS] Path rewrite middleware - Original URL:', originalUrl, 'Path:', originalPath);
   
   // If the path or URL starts with /api/todos, strip it
   if ((req.path && req.path.startsWith('/api/todos')) || (req.url && req.url.startsWith('/api/todos'))) {
@@ -67,6 +69,8 @@ app.use((req, res, next) => {
     });
     
     console.log('[API/TODOS] Rewritten path:', req.method, 'Original:', originalPath, 'New:', newPath, 'URL:', newUrl);
+  } else {
+    console.log('[API/TODOS] Path does not start with /api/todos, skipping rewrite');
   }
   next();
 });
