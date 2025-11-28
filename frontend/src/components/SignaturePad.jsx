@@ -22,17 +22,24 @@ export const SignaturePad = ({ field, value, onChange, required }) => {
       const originalOverflow = document.body.style.overflow;
       const originalTouchAction = document.body.style.touchAction;
       const originalPosition = document.body.style.position;
+      const originalTop = document.body.style.top;
+      const scrollY = window.scrollY;
       
       document.body.style.overflow = 'hidden';
       document.body.style.touchAction = 'none';
       document.body.style.position = 'fixed';
       document.body.style.width = '100%';
+      document.body.style.top = `-${scrollY}px`;
       
-      // Also prevent scrolling on modal overlay
+      // Also prevent scrolling on modal overlay and content
       const modalOverlay = document.querySelector('.modal-overlay');
+      const modalContent = document.querySelector('.modal-content');
       if (modalOverlay) {
         modalOverlay.style.overflow = 'hidden';
         modalOverlay.style.touchAction = 'none';
+      }
+      if (modalContent) {
+        modalContent.classList.add('signature-active');
       }
       
       return () => {
@@ -41,10 +48,15 @@ export const SignaturePad = ({ field, value, onChange, required }) => {
         document.body.style.touchAction = originalTouchAction;
         document.body.style.position = originalPosition;
         document.body.style.width = '';
+        document.body.style.top = originalTop;
+        window.scrollTo(0, scrollY);
         
         if (modalOverlay) {
           modalOverlay.style.overflow = '';
           modalOverlay.style.touchAction = '';
+        }
+        if (modalContent) {
+          modalContent.classList.remove('signature-active');
         }
       };
     }
