@@ -41,10 +41,17 @@ app.use((req, res, next) => {
 // Strip /api/todos prefix from the path so the router sees paths like /, /:id, etc.
 app.use((req, res, next) => {
   // If the path starts with /api/todos, strip it
-  if (req.path.startsWith('/api/todos')) {
-    req.url = req.url.replace('/api/todos', '') || '/';
-    req.path = req.path.replace('/api/todos', '') || '/';
+  if (req.path && req.path.startsWith('/api/todos')) {
+    const newPath = req.path.replace('/api/todos', '') || '/';
+    const newUrl = req.url ? req.url.replace('/api/todos', '') || '/' : newPath;
+    req.url = newUrl;
+    req.path = newPath;
     console.log('[API/TODOS] Rewritten path:', req.method, req.url, req.path);
+  } else if (req.path === '/api/todos' || req.url === '/api/todos') {
+    // Handle exact match
+    req.url = '/';
+    req.path = '/';
+    console.log('[API/TODOS] Rewritten exact path to root');
   }
   next();
 });

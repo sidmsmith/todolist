@@ -41,10 +41,17 @@ app.use((req, res, next) => {
 // Strip /api/todo-types prefix from the path so the router sees paths like /, /:id, etc.
 app.use((req, res, next) => {
   // If the path starts with /api/todo-types, strip it
-  if (req.path.startsWith('/api/todo-types')) {
-    req.url = req.url.replace('/api/todo-types', '') || '/';
-    req.path = req.path.replace('/api/todo-types', '') || '/';
+  if (req.path && req.path.startsWith('/api/todo-types')) {
+    const newPath = req.path.replace('/api/todo-types', '') || '/';
+    const newUrl = req.url ? req.url.replace('/api/todo-types', '') || '/' : newPath;
+    req.url = newUrl;
+    req.path = newPath;
     console.log('[API/TODO-TYPES] Rewritten path:', req.method, req.url, req.path);
+  } else if (req.path === '/api/todo-types' || req.url === '/api/todo-types') {
+    // Handle exact match
+    req.url = '/';
+    req.path = '/';
+    console.log('[API/TODO-TYPES] Rewritten exact path to root');
   }
   next();
 });
