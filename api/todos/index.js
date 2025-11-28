@@ -40,18 +40,32 @@ app.use((req, res, next) => {
 
 // Strip /api/todos prefix from the path so the router sees paths like /, /:id, etc.
 app.use((req, res, next) => {
-  // If the path starts with /api/todos, strip it
-  if (req.path && req.path.startsWith('/api/todos')) {
-    const newPath = req.path.replace('/api/todos', '') || '/';
-    const newUrl = req.url ? req.url.replace('/api/todos', '') || '/' : newPath;
+  const originalUrl = req.url;
+  const originalPath = req.path;
+  
+  // If the path or URL starts with /api/todos, strip it
+  if ((req.path && req.path.startsWith('/api/todos')) || (req.url && req.url.startsWith('/api/todos'))) {
+    // Extract query string if present
+    const queryString = originalUrl.includes('?') ? originalUrl.substring(originalUrl.indexOf('?')) : '';
+    
+    // Remove /api/todos from the path
+    let newPath = originalPath ? originalPath.replace('/api/todos', '') : '/';
+    if (!newPath || newPath === '') {
+      newPath = '/';
+    }
+    
+    // Construct new URL with path and query string
+    const newUrl = newPath + queryString;
+    
     req.url = newUrl;
-    req.path = newPath;
-    console.log('[API/TODOS] Rewritten path:', req.method, req.url, req.path);
-  } else if (req.path === '/api/todos' || req.url === '/api/todos') {
-    // Handle exact match
-    req.url = '/';
-    req.path = '/';
-    console.log('[API/TODOS] Rewritten exact path to root');
+    // Manually set path since Express might not recalculate it correctly
+    Object.defineProperty(req, 'path', {
+      value: newPath,
+      writable: true,
+      configurable: true
+    });
+    
+    console.log('[API/TODOS] Rewritten path:', req.method, 'Original:', originalPath, 'New:', newPath, 'URL:', newUrl);
   }
   next();
 });

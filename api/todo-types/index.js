@@ -40,18 +40,32 @@ app.use((req, res, next) => {
 
 // Strip /api/todo-types prefix from the path so the router sees paths like /, /:id, etc.
 app.use((req, res, next) => {
-  // If the path starts with /api/todo-types, strip it
-  if (req.path && req.path.startsWith('/api/todo-types')) {
-    const newPath = req.path.replace('/api/todo-types', '') || '/';
-    const newUrl = req.url ? req.url.replace('/api/todo-types', '') || '/' : newPath;
+  const originalUrl = req.url;
+  const originalPath = req.path;
+  
+  // If the path or URL starts with /api/todo-types, strip it
+  if ((req.path && req.path.startsWith('/api/todo-types')) || (req.url && req.url.startsWith('/api/todo-types'))) {
+    // Extract query string if present
+    const queryString = originalUrl.includes('?') ? originalUrl.substring(originalUrl.indexOf('?')) : '';
+    
+    // Remove /api/todo-types from the path
+    let newPath = originalPath ? originalPath.replace('/api/todo-types', '') : '/';
+    if (!newPath || newPath === '') {
+      newPath = '/';
+    }
+    
+    // Construct new URL with path and query string
+    const newUrl = newPath + queryString;
+    
     req.url = newUrl;
-    req.path = newPath;
-    console.log('[API/TODO-TYPES] Rewritten path:', req.method, req.url, req.path);
-  } else if (req.path === '/api/todo-types' || req.url === '/api/todo-types') {
-    // Handle exact match
-    req.url = '/';
-    req.path = '/';
-    console.log('[API/TODO-TYPES] Rewritten exact path to root');
+    // Manually set path since Express might not recalculate it correctly
+    Object.defineProperty(req, 'path', {
+      value: newPath,
+      writable: true,
+      configurable: true
+    });
+    
+    console.log('[API/TODO-TYPES] Rewritten path:', req.method, 'Original:', originalPath, 'New:', newPath, 'URL:', newUrl);
   }
   next();
 });
