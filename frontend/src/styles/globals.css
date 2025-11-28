@@ -1005,6 +1005,12 @@ body {
   flex-direction: column;
 }
 
+/* Prevent scrolling when signature pad is active (mobile) */
+.modal-content.signature-active {
+  overflow: hidden;
+  touch-action: none;
+}
+
 .modal-header {
   display: flex;
   justify-content: space-between;

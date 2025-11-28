@@ -15,7 +15,46 @@ export const SignaturePad = ({ field, value, onChange, required }) => {
     }
   }, []);
 
+  // Freeze screen scrolling on mobile when drawing
+  useEffect(() => {
+    if (isDrawing) {
+      // Prevent body scroll and touch scrolling
+      const originalOverflow = document.body.style.overflow;
+      const originalTouchAction = document.body.style.touchAction;
+      const originalPosition = document.body.style.position;
+      
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      
+      // Also prevent scrolling on modal overlay
+      const modalOverlay = document.querySelector('.modal-overlay');
+      if (modalOverlay) {
+        modalOverlay.style.overflow = 'hidden';
+        modalOverlay.style.touchAction = 'none';
+      }
+      
+      return () => {
+        // Restore original styles when done drawing
+        document.body.style.overflow = originalOverflow;
+        document.body.style.touchAction = originalTouchAction;
+        document.body.style.position = originalPosition;
+        document.body.style.width = '';
+        
+        if (modalOverlay) {
+          modalOverlay.style.overflow = '';
+          modalOverlay.style.touchAction = '';
+        }
+      };
+    }
+  }, [isDrawing]);
+
   const startDrawing = (e) => {
+    // Prevent default to stop scrolling
+    if (e.touches) {
+      e.preventDefault();
+    }
     setIsDrawing(true);
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -28,6 +67,10 @@ export const SignaturePad = ({ field, value, onChange, required }) => {
 
   const draw = (e) => {
     if (!isDrawing) return;
+    // Prevent default to stop scrolling
+    if (e.touches) {
+      e.preventDefault();
+    }
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     const rect = canvas.getBoundingClientRect();
@@ -83,7 +126,10 @@ export const SignaturePad = ({ field, value, onChange, required }) => {
             border: '1px solid #ccc',
             borderRadius: '4px',
             cursor: 'crosshair',
-            backgroundColor: '#fff'
+            backgroundColor: '#fff',
+            touchAction: 'none',
+            userSelect: 'none',
+            WebkitUserSelect: 'none'
           }}
         />
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
