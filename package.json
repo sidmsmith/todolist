@@ -1,7 +1,7 @@
 {
   "name": "todolist",
   "version": "0.1.0",
-  "description": "Supervisor To-Do List for Warehouse Management System",
+  "description": "To-Do List for Warehouse Management System",
   "private": true,
   "scripts": {
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",

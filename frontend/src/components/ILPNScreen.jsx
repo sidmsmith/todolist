@@ -7,14 +7,15 @@ export const ILPNScreen = () => {
   const { todos: todosFromHook, getTodoTypeById, refetch } = useTodoList();
   const [todos, setTodos] = useState([]);
   
-  // Fetch all todos for ILPN screen (including completed/dismissed)
+  // Fetch all todos for To Dos screen (including completed/dismissed)
   useEffect(() => {
     const fetchAllTodos = async () => {
       try {
         const API_BASE = import.meta.env.DEV ? 'http://localhost:5000/api' : '/api';
-        const userId = localStorage.getItem('todoUserId') || 'Miles Atwater';
-        const response = await fetch(`${API_BASE}/todos?userId=${encodeURIComponent(userId)}&includeAll=true`);
+        // Don't pass userId when includeAll=true to avoid any user-specific filtering
+        const response = await fetch(`${API_BASE}/todos?includeAll=true`);
         const data = await response.json();
+        console.log(`Fetched ${data.data?.length || 0} todos for To Dos screen`);
         setTodos(data.data || []);
       } catch (err) {
         console.error('Error fetching all todos:', err);
@@ -190,7 +191,7 @@ export const ILPNScreen = () => {
       <header className="ilpn-header">
         <div className="header-left">
           <button className="menu-toggle">☰</button>
-          <h1 className="header-title">ILPNS</h1>
+          <h1 className="header-title">To Dos</h1>
         </div>
         <div className="header-center">
           <span>Org: SS-DEMO | Profile: SS-DEMO | Facility: SS-DEMO-DM1</span>

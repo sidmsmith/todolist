@@ -2,7 +2,84 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getTimeUntilDue } from '../utils/timeUtils';
 import { SnoozeMenu } from './SnoozeMenu';
 import { DismissMenu } from './DismissMenu';
+import { CompletionDropdown } from './CompletionDropdown';
 import { ExternalLinkModal } from './ExternalLinkModal';
+
+// Mapping of detail types to icons
+const DETAIL_ICONS = {
+  // People & Teams
+  employee: '👤',
+  assignedTo: '👥',
+  supervisor: '👔',
+  shift: '🕐',
+  teamSize: '👨‍👩‍👧‍👦',
+  
+  // Location & Movement
+  zone: '📍',
+  location: '📍',
+  fromLocation: '⬅️',
+  toLocation: '➡️',
+  aisle: '🗺️',
+  dock: '🚢',
+  
+  // Equipment & Assets
+  equipmentId: '🔧',
+  vehicleId: '🚛',
+  machineStatus: '⚙️',
+  assetTag: '🏷️',
+  product: '🏷️',
+  item: '🏷️',
+  
+  // Orders & Inventory
+  orderNumber: '📦',
+  orderStatus: '📝',
+  inventoryLevel: '📉',
+  batchNumber: '🔢',
+  lotNumber: '🎫',
+  
+  // Quantity & Volume
+  quantity: '📊',
+  weight: '⚖️',
+  volume: '📦📦',
+  palletCount: '🗂️',
+  
+  // Time & Urgency
+  cutoffMinutes: '⏱️',
+  timeRemaining: '⏰',
+  deadline: '🕐',
+  escalationLevel: '⚠️',
+  slaMinutes: '⏳',
+  
+  // Environmental
+  temperature: '🌡️',
+  humidity: '💧',
+  pressure: '🌪️',
+  lighting: '💡',
+  
+  // Status & Condition
+  condition: '✅',
+  qualityStatus: '⭐',
+  severity: '🔴',
+  statusCode: '🏷️',
+  
+  // Safety & Compliance
+  safetyLevel: '🦺',
+  complianceStatus: '📋',
+  incidentType: '🚨',
+  certification: '🎓',
+  
+  // Communication & Escalation
+  notificationCount: '🔔',
+  escalatedBy: '📢',
+  priorityReason: '💬',
+  relatedTodoCount: '🔗',
+  
+  // External Link
+  externalLink: '🔗'
+};
+
+// Default icon for unmapped detail types
+const DEFAULT_DETAIL_ICON = '❌';
 
 export const TodoCard = ({ 
   todo, 
@@ -15,9 +92,11 @@ export const TodoCard = ({
 }) => {
   const [showSnoozeMenu, setShowSnoozeMenu] = useState(false);
   const [showDismissMenu, setShowDismissMenu] = useState(false);
+  const [showCompletionDropdown, setShowCompletionDropdown] = useState(false);
   const [showExternalLink, setShowExternalLink] = useState(false);
   const snoozeRef = useRef(null);
   const dismissRef = useRef(null);
+  const completionRef = useRef(null);
 
   // Close menus when clicking outside
   useEffect(() => {
@@ -28,15 +107,18 @@ export const TodoCard = ({
       if (showDismissMenu && dismissRef.current && !dismissRef.current.contains(event.target)) {
         setShowDismissMenu(false);
       }
+      if (showCompletionDropdown && completionRef.current && !completionRef.current.contains(event.target)) {
+        setShowCompletionDropdown(false);
+      }
     };
 
-    if (showSnoozeMenu || showDismissMenu) {
+    if (showSnoozeMenu || showDismissMenu || showCompletionDropdown) {
       document.addEventListener('mousedown', handleClickOutside);
       return () => {
         document.removeEventListener('mousedown', handleClickOutside);
       };
     }
-  }, [showSnoozeMenu, showDismissMenu]);
+  }, [showSnoozeMenu, showDismissMenu, showCompletionDropdown]);
 
   const timeInfo = getTimeUntilDue(todo.dueTime);
   const hasDynamicLink = isDynamic && todo.details?.externalLink;
@@ -91,83 +173,113 @@ export const TodoCard = ({
 
         {todo.details && Object.keys(todo.details).length > 0 && (
           <div className="todo-details">
-            {/* People & Teams */}
-            {todo.details.employee && <span>👤 {todo.details.employee}</span>}
-            {todo.details.assignedTo && <span>👥 {todo.details.assignedTo}</span>}
-            {todo.details.supervisor && <span>👔 {todo.details.supervisor}</span>}
-            {todo.details.shift && <span>🕐 {todo.details.shift}</span>}
-            {todo.details.teamSize && <span>👨‍👩‍👧‍👦 Team: {todo.details.teamSize}</span>}
-            
-            {/* Location & Movement */}
-            {todo.details.zone && <span>📍 {todo.details.zone}</span>}
-            {todo.details.location && <span>📍 {todo.details.location}</span>}
-            {todo.details.fromLocation && <span>⬅️ From: {todo.details.fromLocation}</span>}
-            {todo.details.toLocation && <span>➡️ To: {todo.details.toLocation}</span>}
-            {todo.details.aisle && <span>🗺️ Aisle: {todo.details.aisle}</span>}
-            {todo.details.dock && <span>🚢 Dock: {todo.details.dock}</span>}
-            
-            {/* Equipment & Assets */}
-            {todo.details.equipmentId && <span>🔧 Equipment: {todo.details.equipmentId}</span>}
-            {todo.details.vehicleId && <span>🚛 Vehicle: {todo.details.vehicleId}</span>}
-            {todo.details.machineStatus && <span>⚙️ Status: {todo.details.machineStatus}</span>}
-            {todo.details.assetTag && <span>🏷️ Asset: {todo.details.assetTag}</span>}
-            
-            {/* Orders & Inventory */}
-            {todo.details.orderNumber && <span>📦 {todo.details.orderNumber}</span>}
-            {todo.details.orderStatus && <span>📝 Order: {todo.details.orderStatus}</span>}
-            {todo.details.inventoryLevel && <span>📉 Stock: {todo.details.inventoryLevel}</span>}
-            {todo.details.batchNumber && <span>🔢 Batch: {todo.details.batchNumber}</span>}
-            {todo.details.lotNumber && <span>🎫 Lot: {todo.details.lotNumber}</span>}
-            
-            {/* Quantity & Volume */}
-            {todo.details.quantity && <span>📊 Qty: {todo.details.quantity}</span>}
-            {todo.details.weight && <span>⚖️ Weight: {todo.details.weight}</span>}
-            {todo.details.volume && <span>📦📦 Volume: {todo.details.volume}</span>}
-            {todo.details.palletCount && <span>🗂️ Pallets: {todo.details.palletCount}</span>}
-            
-            {/* Time & Urgency */}
-            {todo.details.cutoffMinutes && <span>⏱️ Cutoff in {todo.details.cutoffMinutes} min</span>}
-            {todo.details.timeRemaining && <span>⏰ Time remaining: {todo.details.timeRemaining}</span>}
-            {todo.details.deadline && <span>🕐 Deadline: {todo.details.deadline}</span>}
-            {todo.details.escalationLevel && <span>⚠️ Escalation: {todo.details.escalationLevel}</span>}
-            {todo.details.slaMinutes && <span>⏳ SLA: {todo.details.slaMinutes} min remaining</span>}
-            
-            {/* Environmental */}
-            {todo.details.temperature && <span>🌡️ {todo.details.temperature}</span>}
-            {todo.details.humidity && <span>💧 Humidity: {todo.details.humidity}</span>}
-            {todo.details.pressure && <span>🌪️ Pressure: {todo.details.pressure}</span>}
-            {todo.details.lighting && <span>💡 Lighting: {todo.details.lighting}</span>}
-            
-            {/* Status & Condition */}
-            {todo.details.condition && <span>✅ Condition: {todo.details.condition}</span>}
-            {todo.details.qualityStatus && <span>⭐ Quality: {todo.details.qualityStatus}</span>}
-            {todo.details.severity && <span>🔴 Severity: {todo.details.severity}</span>}
-            {todo.details.statusCode && <span>🏷️ Status: {todo.details.statusCode}</span>}
-            
-            {/* Safety & Compliance */}
-            {todo.details.safetyLevel && <span>🦺 Safety: {todo.details.safetyLevel}</span>}
-            {todo.details.complianceStatus && <span>📋 Compliance: {todo.details.complianceStatus}</span>}
-            {todo.details.incidentType && <span>🚨 Incident: {todo.details.incidentType}</span>}
-            {todo.details.certification && <span>🎓 Cert: {todo.details.certification}</span>}
-            
-            {/* Communication & Escalation */}
-            {todo.details.notificationCount && <span>🔔 Notifications: {todo.details.notificationCount}</span>}
-            {todo.details.escalatedBy && <span>📢 Escalated by: {todo.details.escalatedBy}</span>}
-            {todo.details.priorityReason && <span>💬 Reason: {todo.details.priorityReason}</span>}
-            {todo.details.relatedTodoCount && <span>🔗 Related: {todo.details.relatedTodoCount} todos</span>}
+            {Object.entries(todo.details)
+              .filter(([key, value]) => value != null && value !== '' && key !== 'externalLink')
+              .map(([key, value]) => {
+                const icon = DETAIL_ICONS[key] || DEFAULT_DETAIL_ICON;
+                const displayKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                
+                // Special handling for orderNumber (make it a link)
+                if (key === 'orderNumber') {
+                  return (
+                    <span key={key}>
+                      {icon} <a href="https://espn.com" target="_blank" rel="noopener noreferrer">{value}</a>
+                    </span>
+                  );
+                }
+                
+                // Format display text - match original format where applicable
+                let displayText = value;
+                
+                // Fields that should show with label prefix
+                const labelFields = [
+                  'teamSize', 'equipmentId', 'vehicleId', 'assetTag', 'product', 'item', 'orderStatus', 
+                  'inventoryLevel', 'batchNumber', 'lotNumber', 'quantity', 'weight', 
+                  'volume', 'palletCount', 'humidity', 'pressure', 'lighting', 
+                  'condition', 'qualityStatus', 'severity', 'statusCode', 'safetyLevel', 
+                  'complianceStatus', 'incidentType', 'certification', 'notificationCount', 
+                  'escalatedBy', 'priorityReason', 'relatedTodoCount', 'aisle', 'dock',
+                  'escalationLevel', 'slaMinutes', 'cutoffMinutes', 'timeRemaining', 'deadline'
+                ];
+                
+                if (labelFields.includes(key)) {
+                  // Format key for display (e.g., "teamSize" -> "Team Size")
+                  const formattedKey = displayKey;
+                  displayText = `${formattedKey}: ${value}`;
+                } else if (key === 'fromLocation') {
+                  displayText = `From: ${value}`;
+                } else if (key === 'toLocation') {
+                  displayText = `To: ${value}`;
+                } else if (key === 'cutoffMinutes') {
+                  displayText = `Cutoff in ${value} min`;
+                } else if (key === 'slaMinutes') {
+                  displayText = `SLA: ${value} min remaining`;
+                } else if (key === 'timeRemaining') {
+                  displayText = `Time remaining: ${value}`;
+                } else if (key === 'deadline') {
+                  displayText = `Deadline: ${value}`;
+                } else if (key === 'relatedTodoCount') {
+                  displayText = `Related: ${value} todos`;
+                }
+                
+                return (
+                  <span key={key}>
+                    {icon} {displayText}
+                  </span>
+                );
+              })}
           </div>
         )}
 
         <div className="todo-actions">
           {!isDynamic ?  (
             <>
-              <button 
-                className="btn btn-check"
-                onClick={() => onOpenCompletion(todo)}
-                title="Mark complete"
-              >
-                ✓ Complete
-              </button>
+              {(() => {
+                const todoType = getTodoTypeById ? getTodoTypeById(todo.typeId) : null;
+                const completionCodes = todoType?.completionCodes || [];
+                
+                // If dropdown completion method, show dropdown menu
+                if (todoType?.completionMethod === 'dropdown' && completionCodes.length > 0) {
+                  return (
+                    <div className="dropdown-group" ref={completionRef}>
+                      <button 
+                        className="btn btn-check"
+                        onClick={() => setShowCompletionDropdown(!showCompletionDropdown)}
+                        title="Mark complete"
+                      >
+                        ✓ Complete ▼
+                      </button>
+                      {showCompletionDropdown && (
+                        <CompletionDropdown
+                          codes={completionCodes}
+                          onComplete={async (code, text) => {
+                            const completionData = { 
+                              completionCode: code, 
+                              completionReason: text || code 
+                            };
+                            await onComplete(todo.id, completionData);
+                            setShowCompletionDropdown(false);
+                          }}
+                          onClose={() => setShowCompletionDropdown(false)}
+                        />
+                      )}
+                    </div>
+                  );
+                } else {
+                  // Modal or auto completion
+                  return (
+                    <div className="dropdown-group">
+                      <button 
+                        className="btn btn-check"
+                        onClick={() => onOpenCompletion(todo)}
+                        title="Mark complete"
+                      >
+                        ✓ Complete
+                      </button>
+                    </div>
+                  );
+                }
+              })()}
             </>
           ) : null}
           
@@ -189,9 +301,11 @@ export const TodoCard = ({
 
           {(() => {
             const todoType = getTodoTypeById ? getTodoTypeById(todo.typeId) : null;
-            const dismissalCodes = todoType?.dismissalCodes || [];
-            // Hide Dismiss button if completionMethod is "none" and there are no dismissal codes
-            if (todoType?.completionMethod === 'none' && dismissalCodes.length === 0) {
+            const dismissalCodes = todoType?.dismissalCodes;
+            // Handle dismissalCodes: if it's "none" or not an array, hide the button
+            const hasDismissalCodes = Array.isArray(dismissalCodes) && dismissalCodes.length > 0;
+            // Hide Dismiss button if dismissalCodes is "none" or not an array, or if completionMethod is "none" and there are no dismissal codes
+            if (dismissalCodes === 'none' || !hasDismissalCodes) {
               return null;
             }
             return (

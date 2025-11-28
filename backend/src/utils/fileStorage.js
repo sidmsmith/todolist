@@ -55,10 +55,16 @@ async function writeTodos(todos) {
   return await writeFile('todo.json', todos);
 }
 
+// Write todo types
+async function writeTodoTypes(todoTypes) {
+  return await writeFile('todotype.json', todoTypes);
+}
+
 module.exports = {
   readFile,
   writeFile,
   readTodoTypes,
   readTodos,
-  writeTodos
+  writeTodos,
+  writeTodoTypes
 };

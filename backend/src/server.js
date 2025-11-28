@@ -3,6 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs').promises;
 const todoRoutes = require('./routes/todos');
+const todoTypeRoutes = require('./routes/todoTypes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,6 +14,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/todos', todoRoutes);
+app.use('/api/todo-types', todoTypeRoutes);
 
 // Reset routes (only for development/testing)
 if (process.env.NODE_ENV !== 'production' || process.env.ENABLE_RESET === 'true') {
@@ -21,20 +23,6 @@ if (process.env.NODE_ENV !== 'production' || process.env.ENABLE_RESET === 'true'
   console.log('🔄 Reset endpoint available at: POST /api/reset');
 }
 
-// Get todo types
-app.get('/api/todo-types', async (req, res, next) => {
-  try {
-    const { readTodoTypes } = require('./utils/fileStorage');
-    const todoTypes = await readTodoTypes();
-    res.json({
-      timestamp: new Date(),
-      count: todoTypes.length,
-      data: todoTypes
-    });
-  } catch (error) {
-    next(error);
-  }
-});
 
 // Health check
 app.get('/api/health', (req, res) => {

@@ -11,15 +11,14 @@ export const DismissMenu = ({ codes, onDismiss, onClose }) => {
 
   return (
     <div className="dismiss-menu">
-      <div className="menu-title">Dismiss - Select Reason:</div>
-      {codes && codes.map((code) => (
+      {codes && Array.isArray(codes) && codes.map((code) => (
         <button
-          key={code. code}
+          key={code.code}
           onClick={() => {
             if (code.code === 'other') {
               setShowOther(true);
             } else {
-              handleDismiss(code.code, code. label);
+              handleDismiss(code.code, code.label);
             }
           }}
         >

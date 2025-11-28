@@ -4,11 +4,15 @@ import { TodoBadge } from './components/TodoBadge';
 import { TodoDropdown } from './components/TodoDropdown';
 import { TodoSheet } from './components/TodoSheet';
 import { ILPNScreen } from './components/ILPNScreen';
+import { TodoTypeManager } from './components/TodoTypeManager';
+import { MenuOverlay } from './components/MenuOverlay';
 import './styles/globals.css';
 
 function App() {
   const [showTodoPanel, setShowTodoPanel] = useState(false);
   const [showILPNScreen, setShowILPNScreen] = useState(false);
+  const [showTodoTypeManager, setShowTodoTypeManager] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const {
@@ -37,7 +41,7 @@ function App() {
 
   const badgeCount = getBadgeCount();
 
-  // Show ILPN Screen if requested
+  // Show To Dos Screen if requested
   if (showILPNScreen) {
     return (
       <div className="app">
@@ -87,6 +91,29 @@ function App() {
         </picture>
       </div>
 
+      {/* Clickable overlay for existing hamburger menu icon in WMS background */}
+      <div 
+        className="wms-hamburger-clickable"
+        onClick={() => setShowMenu(true)}
+        title="Open menu"
+      />
+
+      {/* Menu Overlay */}
+      {showMenu && (
+        <MenuOverlay
+          isOpen={showMenu}
+          onClose={() => setShowMenu(false)}
+          onToDoListClick={() => {
+            setShowMenu(false);
+            setShowILPNScreen(true);
+          }}
+          onManageTodoTypesClick={() => {
+            setShowMenu(false);
+            setShowTodoTypeManager(true);
+          }}
+        />
+      )}
+
       {/* Todo Badge - Positioned in top-right corner */}
       <div className="todo-badge-container">
         <TodoBadge 
@@ -95,7 +122,7 @@ function App() {
         />
       </div>
 
-      {/* Toggle button to show ILPN Screen */}
+      {/* Toggle button to show To Dos Screen */}
       <button 
         className="view-toggle-btn"
         onClick={() => setShowILPNScreen(true)}
@@ -114,8 +141,38 @@ function App() {
           fontWeight: 'bold'
         }}
       >
-        View ILPN Screen
+        View To Dos
       </button>
+
+      {/* Button to manage Todo Types */}
+      <button 
+        className="view-toggle-btn"
+        onClick={() => setShowTodoTypeManager(true)}
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          left: '180px',
+          zIndex: 10000,
+          padding: '12px 24px',
+          backgroundColor: '#6c757d',
+          color: 'white',
+          border: 'none',
+          borderRadius: '8px',
+          cursor: 'pointer',
+          fontSize: '14px',
+          fontWeight: 'bold'
+        }}
+      >
+        Manage Todo Types
+      </button>
+
+      {/* Todo Type Manager Modal */}
+      {showTodoTypeManager && (
+        <TodoTypeManager
+          isOpen={showTodoTypeManager}
+          onClose={() => setShowTodoTypeManager(false)}
+        />
+      )}
 
       {/* Error Display */}
       {error && (

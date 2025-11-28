@@ -46,8 +46,7 @@
     "status": "Open",
     "completionMethod": "none",
     "details": {
-      "externalLink": "/observations/obs_12346",
-      "employee": "Mike"
+      "externalLink": "/observations/obs_12346"
     }
   },
   {
@@ -63,8 +62,7 @@
     "status": "Open",
     "completionMethod": "none",
     "details": {
-      "externalLink": "/observations/obs_12345",
-      "employee": "Sarah"
+      "externalLink": "/observations/obs_12345"
     }
   },
   {
@@ -130,8 +128,15 @@
     "dueTime": "2025-11-26T08:00:00Z",
     "createdAt": "2025-11-26T07:00:00Z",
     "assignmentGroup": "ALL",
-    "status": "Open",
-    "completionMethod": "manual",
+    "status": "Snoozed",
+    "snoozes": [
+      {
+        "userId": "Miles Atwater",
+        "snoozedUntil": "2025-11-27T06:42:13.856Z",
+        "snoozedAt": "2025-11-27T06:27:13.856Z"
+      }
+    ],
+    "completionMethod": "modal",
     "details": {}
   },
   {
@@ -145,8 +150,14 @@
     "createdAt": "2025-11-26T08:00:00Z",
     "assignmentGroup": "ALL",
     "status": "Snoozed",
-    "snoozedUntil": "2025-11-26T14:30:00Z",
-    "completionMethod": "manual",
+    "snoozes": [
+      {
+        "userId": "Miles Atwater",
+        "snoozedUntil": "2025-11-26T14:30:00Z",
+        "snoozedAt": "2025-11-26T08:15:00Z"
+      }
+    ],
+    "completionMethod": "modal",
     "details": {}
   },
   {
@@ -160,8 +171,81 @@
     "createdAt": "2025-11-26T08:00:00Z",
     "assignmentGroup": "ALL",
     "status": "Open",
-    "completionMethod": "manual",
+    "completionMethod": "modal",
     "details": {}
+  },
+  {
+    "id": "todo_011",
+    "typeId": "quality_check",
+    "title": "Quality Check - Batch QC-2025-001",
+    "description": "Quality inspection for batch QC-2025-001",
+    "category": "HIGH",
+    "priority": 2,
+    "dueTime": "2025-11-27T15:00:00Z",
+    "createdAt": "2025-11-27T10:00:00Z",
+    "assignmentGroup": "ALL",
+    "status": "Open",
+    "completionMethod": "dropdown",
+    "details": {
+      "batchNumber": "QC-2025-001",
+      "product": "Widget A"
+    },
+    "snoozes": []
+  },
+  {
+    "id": "todo_012",
+    "typeId": "incident",
+    "title": "Location Spill - A1AC0102",
+    "description": "Location A1AC0102 has a spill",
+    "category": "MEDIUM",
+    "priority": 4,
+    "dueTime": "2025-11-27T15:00:00Z",
+    "createdAt": "2025-11-27T10:00:00Z",
+    "assignmentGroup": "ALL",
+    "status": "Open",
+    "completionMethod": "modal",
+    "details": {
+      "incidentType": "Spill",
+      "location": "A1AC0102"
+    },
+    "snoozes": []
+  },
+  {
+    "id": "todo_013",
+    "typeId": "comprehensive_inspection",
+    "title": "Cold Storage Zone A - Comprehensive Inspection",
+    "description": "Full inspection of cold storage zone including temperature monitoring, item verification, and photo documentation",
+    "category": "HIGH",
+    "priority": 2,
+    "dueTime": "2025-11-27T20:00:00.000Z",
+    "createdAt": "2025-11-27T15:39:07.604Z",
+    "assignmentGroup": "ALL",
+    "status": "Open",
+    "completionMethod": "modal",
+    "details": {
+      "zone": "Cold Storage Zone A",
+      "temperature": "-18.2°C",
+      "location": "Aisle 3, Rack 12"
+    },
+    "snoozes": []
+  }
+  ,
+  {
+    "id": "todo_014",
+    "typeId": "cleaning",
+    "title": "Clean Receiving Dock",
+    "description": "Receiving dock has been identified as messy",
+    "category": "LOW",
+    "priority": 3,
+    "dueTime": "2025-11-27T18:00:00.000Z",
+    "createdAt": "2025-11-27T13:39:07.604Z",
+    "assignmentGroup": "ALL",
+    "status": "Open",
+    "completionMethod": "modal",
+    "details": {
+      "zone": "Receiving Dock"
+    },
+    "snoozes": []
   }
 ]
 

@@ -1,26 +1,26 @@
 {
   "version": 2,
-  "builds": [
+  "buildCommand": "npm run build",
+  "outputDirectory": "frontend/dist",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install && cd frontend && npm install && cd ../backend && npm install",
+  "framework": null,
+  "rewrites": [
     {
-      "src": "api/index.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "50mb"
-      }
+      "source": "/api/todos/(.*)",
+      "destination": "/api/todos/$1"
     },
     {
-      "src": "server.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "rewrites": [
+      "source": "/api/todo-types",
+      "destination": "/api/todo-types"
+    },
     {
       "source": "/api/(.*)",
       "destination": "/api/index.py"
     },
     {
       "source": "/(.*)",
-      "destination": "/server.js"
+      "destination": "/index.html"
     }
   ],
   "headers": [
@@ -35,4 +35,3 @@
     }
   ]
 }
-

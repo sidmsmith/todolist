@@ -6,9 +6,9 @@
     "completionMethod": "auto",
     "completionFields": [],
     "dismissalCodes": [
-      { "code": "looks_okay", "label": "Looks okay" },
-      { "code": "handled_verbally", "label": "Handled verbally" },
-      { "code": "false_alert", "label": "False alert" },
+      { "code": "looks_okay", "label": "No Need" },
+      { "code": "handled_verbally", "label": "Handled Verbally" },
+      { "code": "false_alert", "label": "False Alarm" },
       { "code": "other", "label": "Other" }
     ]
   },
@@ -16,14 +16,14 @@
     "id": "restroom_inspection",
     "name": "Restroom Inspection",
     "priority": 2,
-    "completionMethod": "manual",
+    "completionMethod": "modal",
     "completionFields": [
       { "fieldName": "cleanliness_score", "type": "rating", "label": "Cleanliness Score (1-5)", "required": true },
       { "fieldName": "comments", "type": "textarea", "label": "Comments", "required": false }
     ],
     "dismissalCodes": [
-      { "code": "already_completed", "label": "Already completed" },
-      { "code": "false_alert", "label": "False alert" },
+      { "code": "already_completed", "label": "Already Completed" },
+      { "code": "false_alert", "label": "False Alarm" },
       { "code": "other", "label": "Other" }
     ]
   },
@@ -33,11 +33,7 @@
     "priority": 2,
     "completionMethod": "none",
     "completionFields": [],
-    "dismissalCodes": [
-      { "code": "handled", "label": "Handled" },
-      { "code": "false_alert", "label": "False alert" },
-      { "code": "other", "label": "Other" }
-    ],
+    "dismissalCodes": "none",
     "notes": "Dynamic todo - links to external WMS record.  No manual completion."
   },
   {
@@ -46,11 +42,7 @@
     "priority": 2,
     "completionMethod": "none",
     "completionFields": [],
-    "dismissalCodes": [
-      { "code": "resolved", "label": "Resolved" },
-      { "code": "false_alert", "label": "False alert" },
-      { "code": "other", "label": "Other" }
-    ],
+    "dismissalCodes": "none",
     "notes": "Dynamic todo - auto-disappears when condition = false"
   },
   {
@@ -60,8 +52,8 @@
     "completionMethod": "none",
     "completionFields": [],
     "dismissalCodes": [
-      { "code": "temp_corrected", "label": "Temperature corrected" },
-      { "code": "false_alert", "label": "False alert" },
+      { "code": "temp_corrected", "label": "Temperature Corrected" },
+      { "code": "false_alert", "label": "False Alarm" },
       { "code": "other", "label": "Other" }
     ],
     "notes": "Critical dynamic todo - always pinned top"
@@ -70,29 +62,113 @@
     "id": "safety_inspection",
     "name": "Safety Inspection",
     "priority": 2,
-    "completionMethod": "manual",
+    "completionMethod": "modal",
     "completionFields": [
       { "fieldName": "inspection_status", "type": "select", "label": "Status", "options": ["Pass", "Fail", "Needs Attention"], "required": true },
       { "fieldName": "notes", "type": "textarea", "label": "Notes", "required": false }
     ],
     "dismissalCodes": [
       { "code": "completed", "label": "Completed" },
-      { "code": "false_alert", "label": "False alert" }
+      { "code": "false_alert", "label": "False Alarm" }
     ]
   },
   {
     "id": "equipment_maintenance",
     "name": "Equipment Maintenance",
     "priority": 3,
-    "completionMethod": "manual",
+    "completionMethod": "modal",
     "completionFields": [
       { "fieldName": "maintenance_type", "type": "select", "label": "Maintenance Type", "options": ["Preventive", "Corrective"], "required": true },
       { "fieldName": "technician_name", "type": "text", "label": "Technician Name", "required": true }
     ],
     "dismissalCodes": [
-      { "code": "scheduled", "label": "Scheduled for later" },
-      { "code": "completed", "label": "Already completed" },
+      { "code": "scheduled", "label": "Scheduled for Later" },
+      { "code": "completed", "label": "Already Completed" },
       { "code": "other", "label": "Other" }
     ]
+  },
+  {
+    "id": "quality_check",
+    "name": "Quality Check",
+    "priority": 2,
+    "completionMethod": "dropdown",
+    "completionFields": [],
+    "completionCodes": [
+      { "code": "passed", "label": "Passed" },
+      { "code": "failed", "label": "Failed" },
+      { "code": "needs_review", "label": "Needs Review" },
+      { "code": "other", "label": "Other" }
+    ],
+    "dismissalCodes": [
+      { "code": "false_alert", "label": "False Alarm" },
+      { "code": "other", "label": "Other" }
+    ]
+  },  {
+    "id": "incident",
+    "name": "Incident",
+    "priority": 4,
+    "completionMethod": "modal",
+    "completionFields": [
+      { "fieldName": "solution", "type": "select", "label": "Incident Resolution", "options": ["Cleaned", "Repaired", "No Problem"], "required": true },
+      { "fieldName": "name", "type": "text", "label": "Completed By", "required": false }
+    ],
+    "dismissalCodes": [
+      { "code": "false_alert", "label": "False Alarm" },
+      { "code": "other", "label": "Other" }
+    ]
+  },
+  {
+    "id": "comprehensive_inspection",
+    "name": "Comprehensive Inspection",
+    "priority": 2,
+    "completionMethod": "modal",
+    "completionFields": [
+      { "fieldName": "inspection_date", "type": "date", "label": "Inspection Date", "required": false },
+      { "fieldName": "inspection_time", "type": "datetime", "label": "Inspection Date/Time", "required": false },
+      { "fieldName": "temperature", "type": "number", "label": "Temperature (°F)", "required": false, "min": -20, "max": 120, "step": 0.1 },
+      { "fieldName": "item_barcode", "type": "barcode", "label": "Scan Item Barcode", "required": false },
+      { "fieldName": "location_qr", "type": "qr", "label": "Scan Location QR Code", "required": false },
+      { "fieldName": "photo_evidence", "type": "photo", "label": "Photo Evidence", "required": false },
+      { "fieldName": "supervisor_signature", "type": "signature", "label": "Supervisor Signature", "required": false },
+      { "fieldName": "notes", "type": "textarea", "label": "Additional Notes", "required": false }
+    ],
+    "dismissalCodes": [
+      { "code": "not_applicable", "label": "Not Applicable" },
+      { "code": "false_alert", "label": "False Alarm" },
+      { "code": "other", "label": "Other" }
+    ]
+  }
+  ,
+  {
+    "id": "cleaning",
+    "name": "Cleaning",
+    "priority": 3,
+    "completionMethod": "modal",
+    "completionFields": [
+      {
+        "fieldName": "cleanliness_score",
+        "type": "rating",
+        "label": "Cleanliness Score",
+        "required": true,
+        "options": [
+          ""
+        ],
+        "min": 1,
+        "max": 8
+      },
+      {
+        "fieldName": "completion_method",
+        "type": "select",
+        "label": "Completion Method",
+        "required": true,
+        "options": [
+          "Swept",
+          "Mopped",
+          "Vacumed"
+        ]
+      }
+    ],
+    "dismissalCodes": "none",
+    "completionCodes": []
   }
 ]

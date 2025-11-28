@@ -60,9 +60,19 @@ export const TodoDropdown = ({
     return grouped;
   };
 
-  const handleOpenCompletion = (todo) => {
-    setSelectedTodo(todo);
-    setShowCompletionModal(true);
+  const handleOpenCompletion = async (todo) => {
+    // Check completion method
+    const todoType = getTodoTypeById ? getTodoTypeById(todo.typeId) : null;
+    
+    if (todoType?.completionMethod === 'auto') {
+      // Auto-complete: skip modal and complete directly
+      await onComplete(todo.id, null);
+    } else if (todoType?.completionMethod === 'modal') {
+      // Modal completion: show modal
+      setSelectedTodo(todo);
+      setShowCompletionModal(true);
+    }
+    // dropdown completion is handled in TodoCard
   };
 
   const handleCompleteClick = async (completionData) => {
@@ -73,6 +83,12 @@ export const TodoDropdown = ({
         setSelectedTodo(null);
       }
     }
+  };
+
+  // Handler for dropdown completion (accepts todoId directly)
+  const handleDropdownComplete = async (todoId, completionData) => {
+    const success = await onComplete(todoId, completionData);
+    return success;
   };
 
   const handleSnoozeClick = async (todoId, minutes) => {
@@ -111,7 +127,7 @@ export const TodoDropdown = ({
                 <TodoCard
                   key={todo.id}
                   todo={todo}
-                  onComplete={handleCompleteClick}
+                  onComplete={onComplete}
                   onSnooze={(minutes) => handleSnoozeClick(todo.id, minutes)}
                   onDismiss={(reason) => handleDismissClick(todo.id, reason)}
                   onOpenCompletion={handleOpenCompletion}
@@ -166,7 +182,7 @@ export const TodoDropdown = ({
                   <TodoCard
                     key={todo.id}
                     todo={todo}
-                    onComplete={handleCompleteClick}
+                    onComplete={onComplete}
                     onSnooze={(minutes) => handleSnoozeClick(todo.id, minutes)}
                     onDismiss={(reason) => handleDismissClick(todo.id, reason)}
                     onOpenCompletion={handleOpenCompletion}
@@ -185,7 +201,7 @@ export const TodoDropdown = ({
   return (
     <div className="todo-dropdown">
       <div className="dropdown-header">
-        <h2>Supervisor To-Do List</h2>
+        <h2>To-Do List</h2>
         <div className="header-actions">
           <SnoozedToggleIcon
             count={snoozedCount}

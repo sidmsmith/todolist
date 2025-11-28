@@ -21,34 +21,53 @@ async function resetTodos() {
     const todosWithFreshDates = todos.map(todo => {
       const todoCopy = { ...todo };
       
-      // Reset status to Open (unless it was originally Snoozed)
-      if (todoCopy.status === 'Completed' || todoCopy.status === 'Dismissed') {
-        todoCopy.status = 'Open';
-        delete todoCopy.completedAt;
-        delete todoCopy.dismissedAt;
-      }
-      
-      // Update dates to be relative to now for consistent testing
-      // Keep relative time differences, but shift base to now
-      const createdAt = new Date(todo.createdAt);
-      const dueTime = new Date(todo.dueTime);
-      const timeUntilDue = dueTime - createdAt;
-      
-      // Set creation time to 2 hours ago, then calculate due time
-      const baseTime = new Date(now - 2 * 60 * 60 * 1000); // Created 2 hours ago
-      todoCopy.createdAt = baseTime.toISOString();
-      todoCopy.dueTime = new Date(baseTime.getTime() + timeUntilDue).toISOString();
-      
-      // If it was snoozed, update snoozedUntil too
-      if (todoCopy.status === 'Snoozed' && todo.snoozedUntil) {
-        const snoozeTime = new Date(todo.snoozedUntil);
+    // Reset status to Open (unless it was originally Snoozed)
+    if (todoCopy.status === 'Completed' || todoCopy.status === 'Dismissed') {
+      todoCopy.status = 'Open';
+      delete todoCopy.completedAt;
+      delete todoCopy.completedBy;
+      delete todoCopy.dismissedAt;
+      delete todoCopy.dismissedBy;
+      delete todoCopy.dismissalReason;
+      delete todoCopy.completionData;
+    }
+    
+    // Update dates to be relative to now for consistent testing
+    // Keep relative time differences, but shift base to now
+    const createdAt = new Date(todo.createdAt);
+    const dueTime = new Date(todo.dueTime);
+    const timeUntilDue = dueTime - createdAt;
+    
+    // Set creation time to 2 hours ago, then calculate due time
+    const baseTime = new Date(now - 2 * 60 * 60 * 1000); // Created 2 hours ago
+    todoCopy.createdAt = baseTime.toISOString();
+    todoCopy.dueTime = new Date(baseTime.getTime() + timeUntilDue).toISOString();
+    
+    // Handle snoozes array (new format)
+    if (todoCopy.status === 'Snoozed' && Array.isArray(todoCopy.snoozes) && todoCopy.snoozes.length > 0) {
+      // Update snooze times relative to new base time
+      todoCopy.snoozes = todoCopy.snoozes.map(snooze => {
+        const snoozeTime = new Date(snooze.snoozedUntil);
         const snoozeOffset = snoozeTime - createdAt;
-        todoCopy.snoozedUntil = new Date(baseTime.getTime() + snoozeOffset).toISOString();
-      } else if (todoCopy.status === 'Snoozed' && !todo.snoozedUntil) {
-        // If snoozed but no snoozedUntil, remove snooze status
-        todoCopy.status = 'Open';
-        delete todoCopy.snoozedUntil;
-      }
+        return {
+          ...snooze,
+          snoozedUntil: new Date(baseTime.getTime() + snoozeOffset).toISOString(),
+          snoozedAt: new Date(baseTime.getTime() + (snoozeOffset - 15 * 60 * 1000)).toISOString() // 15 min before snoozedUntil
+        };
+      });
+    } else if (todoCopy.status === 'Snoozed') {
+      // If snoozed but no valid snoozes array, remove snooze status
+      todoCopy.status = 'Open';
+      delete todoCopy.snoozes;
+    } else {
+      // Ensure snoozes array exists (empty) for non-snoozed todos
+      todoCopy.snoozes = [];
+    }
+    
+    // Clean up old snoozedUntil field if it exists (migration)
+    if (todoCopy.snoozedUntil) {
+      delete todoCopy.snoozedUntil;
+    }
       
       return todoCopy;
     });

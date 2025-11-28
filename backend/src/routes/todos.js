@@ -84,33 +84,36 @@ router.get('/', async (req, res, next) => {
     }
 
     // Filter by user-specific snoozes (if userId provided and not including snoozed)
+    // Skip user filtering entirely if includeAll is true
     let userFilteredTodos = processedTodos;
-    if (userId && !includeSnoozed) {
-      userFilteredTodos = processedTodos.filter(todo => {
-        // Check if this user has snoozed this todo
-        const userSnooze = todo.snoozes?.find(s => s.userId === userId);
-        if (userSnooze) {
-          const snoozeTime = new Date(userSnooze.snoozedUntil);
-          // If snooze is still active, hide this todo from this user
-          if (now < snoozeTime) {
-            return false; // Hide snoozed todo
+    if (!includeAll) {
+      if (userId && !includeSnoozed) {
+        userFilteredTodos = processedTodos.filter(todo => {
+          // Check if this user has snoozed this todo
+          const userSnooze = todo.snoozes?.find(s => s.userId === userId);
+          if (userSnooze) {
+            const snoozeTime = new Date(userSnooze.snoozedUntil);
+            // If snooze is still active, hide this todo from this user
+            if (now < snoozeTime) {
+              return false; // Hide snoozed todo
+            }
           }
-        }
-        return true; // Show todo
-      });
-    } else if (userId && includeSnoozed) {
-      // Include all non-snoozed todos plus user's snoozed todos
-      const nonSnoozedTodos = processedTodos.filter(todo => {
-        const userSnooze = todo.snoozes?.find(s => s.userId === userId);
-        if (userSnooze) {
-          const snoozeTime = new Date(userSnooze.snoozedUntil);
-          if (now < snoozeTime) {
-            return false; // This is snoozed, will add separately
+          return true; // Show todo
+        });
+      } else if (userId && includeSnoozed) {
+        // Include all non-snoozed todos plus user's snoozed todos
+        const nonSnoozedTodos = processedTodos.filter(todo => {
+          const userSnooze = todo.snoozes?.find(s => s.userId === userId);
+          if (userSnooze) {
+            const snoozeTime = new Date(userSnooze.snoozedUntil);
+            if (now < snoozeTime) {
+              return false; // This is snoozed, will add separately
+            }
           }
-        }
-        return true;
-      });
-      userFilteredTodos = [...nonSnoozedTodos, ...userSnoozedTodos];
+          return true;
+        });
+        userFilteredTodos = [...nonSnoozedTodos, ...userSnoozedTodos];
+      }
     }
 
     // Enrich todos with type info and mark snoozed status

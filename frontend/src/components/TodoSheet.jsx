@@ -61,9 +61,19 @@ export const TodoSheet = ({
   const medium = todos.filter(t => t.priority === 3);
   const low = todos.filter(t => t.priority >= 4);
 
-  const handleOpenCompletion = (todo) => {
-    setSelectedTodo(todo);
-    setShowCompletionModal(true);
+  const handleOpenCompletion = async (todo) => {
+    // Check completion method
+    const todoType = getTodoTypeById ? getTodoTypeById(todo.typeId) : null;
+    
+    if (todoType?.completionMethod === 'auto') {
+      // Auto-complete: skip modal and complete directly
+      await onComplete(todo.id, null);
+    } else if (todoType?.completionMethod === 'modal') {
+      // Modal completion: show modal
+      setSelectedTodo(todo);
+      setShowCompletionModal(true);
+    }
+    // dropdown completion is handled in TodoCard
   };
 
   const handleCompleteClick = async (completionData) => {
@@ -132,7 +142,7 @@ export const TodoSheet = ({
                 <TodoCard
                   key={todo.id}
                   todo={todo}
-                  onComplete={handleCompleteClick}
+                  onComplete={onComplete}
                   onSnooze={(minutes) => handleSnoozeClick(todo.id, minutes)}
                   onDismiss={(reason) => handleDismissClick(todo.id, reason)}
                   onOpenCompletion={handleOpenCompletion}
@@ -190,7 +200,7 @@ export const TodoSheet = ({
         <div className="sheet-title">
           <span>📋</span>
           <span className="badge-mobile">{badgeCount}</span>
-          <span>Supervisor To-Do List</span>
+          <span>To-Do List</span>
         </div>
         <div className="header-actions">
           <SnoozedToggleIcon

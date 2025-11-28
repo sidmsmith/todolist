@@ -1,7 +1,7 @@
 {
   "name": "todolist-backend",
   "version": "1.1.0",
-  "description": "Backend API for Supervisor To-Do List (WMS)",
+  "description": "Backend API for To-Do List (WMS)",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",

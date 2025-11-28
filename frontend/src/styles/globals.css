@@ -453,14 +453,14 @@ body {
 
 /* Snoozed todo styling - darker for better visibility */
 .todo-card.snoozed {
-  background: #e9ecef;
-  border-color: #adb5bd;
+  background: #ced4da;
+  border-color: #868e96;
   opacity: 1;
 }
 
 .todo-card.snoozed:hover {
-  background: #dee2e6;
-  border-color: #868e96;
+  background: #adb5bd;
+  border-color: #6c757d;
 }
 
 .snooze-indicator {
@@ -600,9 +600,21 @@ body {
   gap: 0.25rem;
 }
 
+.todo-details a {
+  color: #0054e9;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.todo-details a:hover {
+  color: #003dab;
+  text-decoration: underline;
+}
+}
+
 .todo-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   margin-top: 0.75rem;
   flex-wrap: wrap;
 }
@@ -685,6 +697,12 @@ body {
 
 .dropdown-group {
   position: relative;
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+.dropdown-group:last-child {
+  margin-right: 0;
 }
 
 .empty-state {
@@ -905,6 +923,47 @@ body {
   background: #f8f9fa;
 }
 
+.completion-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.25rem;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 100;
+  min-width: 180px;
+  padding: 0.5rem;
+}
+
+.completion-dropdown-menu .menu-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.completion-dropdown-menu button {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  color: #212529;
+  border-radius: 4px;
+  margin-bottom: 0.25rem;
+}
+
+.completion-dropdown-menu button:hover {
+  background: #f8f9fa;
+}
+
 .snooze-menu input[type="number"] {
   width: 100%;
   padding: 0.5rem;
@@ -1012,6 +1071,30 @@ body {
   margin-bottom: 0.5rem;
 }
 
+.required-asterisk {
+  color: #dc3545;
+  font-weight: bold;
+  margin-left: 2px;
+}
+
+.form-group.required-field label {
+  color: #dc3545;
+}
+
+.form-group.required-field input[type="text"],
+.form-group.required-field textarea,
+.form-group.required-field select {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.form-group.required-field .rating-group {
+  border: 2px solid #dc3545;
+  border-radius: 8px;
+  padding: 8px;
+  background-color: rgba(220, 53, 69, 0.05);
+}
+
 .form-group input[type="text"],
 .form-group textarea,
 .form-group select {
@@ -1037,23 +1120,282 @@ body {
 .rating-btn {
   width: 40px;
   height: 40px;
-  border: 2px solid #dee2e6;
+  border: 2px solid rgba(0, 0, 0, 0.2);
   border-radius: 50%;
   background: white;
   color: #212529;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.rating-btn:hover {
-  border-color: var(--primary);
-  background: #f0f7ff;
+.rating-btn:hover:not(.active) {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  opacity: 0.9;
 }
 
 .rating-btn.active {
-  background: var(--primary);
+  /* Halo effect: thick border + glow shadow */
+  border-width: 3px;
+  transform: scale(1.15);
+  z-index: 2;
+  /* Box shadow is set inline to use the dynamic color */
+}
+
+/* ========== TODO TYPE EDITOR & MANAGER ========== */
+.todo-type-editor .modal-content,
+.todo-type-manager .modal-content {
+  max-width: 900px;
+  width: 90%;
+}
+
+.editor-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.editor-tabs button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6c757d;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+}
+
+.editor-tabs button:hover {
+  color: var(--primary);
+}
+
+.editor-tabs button.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 600;
+}
+
+.editor-section {
+  padding: 1rem 0;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.field-builder-card {
+  border: 1px solid #dee2e6;
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #f8f9fa;
+}
+
+.field-builder-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.code-builder-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: var(--border-radius);
+  background: #f8f9fa;
+}
+
+.option-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  align-items: center;
+}
+
+.option-row input {
+  flex: 1;
+}
+
+.option-row button {
+  padding: 4px 8px;
+  background: var(--critical);
   color: white;
-  border-color: var(--primary);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 12px;
+}
+
+.btn-danger {
+  background: var(--critical);
+  color: white;
+  border-color: var(--critical);
+}
+
+.btn-danger:hover {
+  background: #c82333;
+  border-color: #bd2130;
+}
+
+.error-text {
+  color: var(--critical);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+  border-color: var(--critical);
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.todo-types-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.todo-types-table th,
+.todo-types-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.todo-types-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  font-size: 13px;
+  color: #495057;
+}
+
+.todo-types-table td code {
+  background: #e9ecef;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-family: 'Courier New', monospace;
+}
+
+.manager-actions {
+  margin-bottom: 1.5rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* ========== WMS HAMBURGER MENU CLICKABLE AREA ========== */
+/* Invisible clickable overlay positioned over the existing hamburger menu icon in the WMS background */
+.wms-hamburger-clickable {
+  position: fixed;
+  /* Adjust these coordinates to match where the hamburger icon appears in your WMS screenshot */
+  top: 10px;        /* Distance from top of viewport */
+  left: 10px;       /* Distance from left of viewport */
+  width: 40px;      /* Width of the clickable area */
+  height: 40px;     /* Height of the clickable area */
+  z-index: 10001;
+  cursor: pointer;
+  /* Uncomment below for debugging to see the clickable area: */
+  /* background: rgba(255, 0, 0, 0.3); */
+  /* border: 1px dashed red; */
+}
+
+/* ========== MENU OVERLAY ========== */
+.menu-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10002;
+}
+
+.menu-slide-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10003;
+  transform: translateX(-100%);
+  animation: slideInFromLeft 0.3s ease-out forwards;
+}
+
+@keyframes slideInFromLeft {
+  to {
+    transform: translateX(0);
+  }
+}
+
+.menu-close-clickable-area {
+  position: absolute;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.menu-close-clickable-area:hover {
+  background-color: rgba(255, 0, 0, 0.1);
+}
+
+.menu-image-container {
+  position: relative;
+  display: inline-block;
+}
+
+.menu-image {
+  display: block;
+  max-height: 100vh;
+  width: auto;
+}
+
+.todo-list-clickable-area {
+  position: absolute;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.todo-list-clickable-area:hover {
+  background-color: rgba(0, 123, 255, 0.1);
 }
