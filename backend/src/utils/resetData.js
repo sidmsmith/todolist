@@ -121,9 +121,14 @@ async function resetTodoTypes() {
  * Reset all data to defaults
  */
 async function resetAll() {
-  await resetTodoTypes();
-  await resetTodos();
+  const todoTypes = await resetTodoTypes();
+  const todos = await resetTodos();
   console.log('✓ All data reset to defaults');
+  return {
+    todoTypesCount: todoTypes.length,
+    todosCount: todos.length,
+    todos: todos.map(t => ({ id: t.id, title: t.title, status: t.status })) // Summary only
+  };
 }
 
 module.exports = {

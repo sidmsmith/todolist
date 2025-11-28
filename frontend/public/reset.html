@@ -101,6 +101,7 @@
             border-radius: 6px;
             font-size: 14px;
             display: none;
+            white-space: pre-line;
         }
         
         .status.show {
@@ -192,7 +193,23 @@
                 const data = await response.json();
                 
                 if (response.ok) {
-                    showStatus(`✅ ${data.message || 'All data reset successfully!'}`, 'success');
+                    let message = `✅ ${data.message || 'All data reset successfully!'}`;
+                    if (data.data) {
+                        if (data.data.todosCount !== undefined) {
+                            message += `\n\n📊 Reset ${data.data.todosCount} todos`;
+                            if (data.data.todos && data.data.todos.length > 0) {
+                                const openTodos = data.data.todos.filter(t => t.status === 'Open').length;
+                                message += ` (${openTodos} Open)`;
+                            }
+                        }
+                        if (data.data.todoTypesCount !== undefined) {
+                            message += `\n📋 Reset ${data.data.todoTypesCount} todo types`;
+                        }
+                    }
+                    if (data.note) {
+                        message += `\n\n⚠️ ${data.note}`;
+                    }
+                    showStatus(message, 'success');
                 } else {
                     showStatus(`❌ Error: ${data.error || 'Failed to reset data'}`, 'error');
                 }
@@ -219,7 +236,18 @@
                 const data = await response.json();
                 
                 if (response.ok) {
-                    showStatus(`✅ ${data.message || 'Todos reset successfully!'}`, 'success');
+                    let message = `✅ ${data.message || 'Todos reset successfully!'}`;
+                    if (data.data && data.data.todosCount !== undefined) {
+                        message += `\n\n📊 Reset ${data.data.todosCount} todos`;
+                        if (data.data.todos && data.data.todos.length > 0) {
+                            const openTodos = data.data.todos.filter(t => t.status === 'Open').length;
+                            message += ` (${openTodos} Open)`;
+                        }
+                    }
+                    if (data.note) {
+                        message += `\n\n⚠️ ${data.note}`;
+                    }
+                    showStatus(message, 'success');
                 } else {
                     showStatus(`❌ Error: ${data.error || 'Failed to reset todos'}`, 'error');
                 }
@@ -246,7 +274,14 @@
                 const data = await response.json();
                 
                 if (response.ok) {
-                    showStatus(`✅ ${data.message || 'Todo types reset successfully!'}`, 'success');
+                    let message = `✅ ${data.message || 'Todo types reset successfully!'}`;
+                    if (data.data && data.data.todoTypesCount !== undefined) {
+                        message += `\n\n📋 Reset ${data.data.todoTypesCount} todo types`;
+                    }
+                    if (data.note) {
+                        message += `\n\n⚠️ ${data.note}`;
+                    }
+                    showStatus(message, 'success');
                 } else {
                     showStatus(`❌ Error: ${data.error || 'Failed to reset todo types'}`, 'error');
                 }

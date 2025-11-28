@@ -20,12 +20,14 @@ router.post('/', async (req, res, next) => {
     //   }
     // }
 
-    await resetAll();
+    const resetResult = await resetAll();
     
     res.json({
       success: true,
       message: 'All data reset to defaults',
-      timestamp: new Date()
+      timestamp: new Date(),
+      data: resetResult,
+      note: 'In Vercel, data is ephemeral and resets between function invocations. This reset affects the current request only.'
     });
   } catch (error) {
     next(error);
@@ -43,12 +45,17 @@ router.post('/todos', async (req, res, next) => {
     //   }
     // }
 
-    await resetTodos();
+    const todos = await resetTodos();
     
     res.json({
       success: true,
       message: 'Todos reset to defaults',
-      timestamp: new Date()
+      timestamp: new Date(),
+      data: {
+        todosCount: todos.length,
+        todos: todos.map(t => ({ id: t.id, title: t.title, status: t.status })) // Summary only
+      },
+      note: 'In Vercel, data is ephemeral and resets between function invocations. This reset affects the current request only.'
     });
   } catch (error) {
     next(error);
@@ -66,12 +73,17 @@ router.post('/todo-types', async (req, res, next) => {
     //   }
     // }
 
-    await resetTodoTypes();
+    const todoTypes = await resetTodoTypes();
     
     res.json({
       success: true,
       message: 'Todo types reset to defaults',
-      timestamp: new Date()
+      timestamp: new Date(),
+      data: {
+        todoTypesCount: todoTypes.length,
+        todoTypes: todoTypes.map(t => ({ id: t.id, name: t.name })) // Summary only
+      },
+      note: 'In Vercel, data is ephemeral and resets between function invocations. This reset affects the current request only.'
     });
   } catch (error) {
     next(error);
