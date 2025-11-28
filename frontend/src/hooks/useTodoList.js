@@ -78,22 +78,38 @@ export const useTodoList = () => {
   const completeTodo = useCallback(async (todoId, completionData = null) => {
     try {
       const userId = getUserId();
-      const response = await fetch(`${API_BASE}/todos/${todoId}/complete`, {
+      const url = `${API_BASE}/todos/${todoId}/complete`;
+      console.log('[COMPLETE] Frontend: Calling', url, 'with body:', { completionData, userId });
+      
+      const response = await fetch(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ completionData, userId })
       });
       
+      console.log('[COMPLETE] Frontend: Response status:', response.status, response.statusText);
+      
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(errorData.error || `Failed to complete todo: ${response.status} ${response.statusText}`);
+        let errorMessage = `Failed to complete todo: ${response.status} ${response.statusText}`;
+        try {
+          const errorData = await response.json();
+          console.log('[COMPLETE] Frontend: Error data:', errorData);
+          errorMessage = errorData.error || errorMessage;
+        } catch (parseError) {
+          const text = await response.text();
+          console.log('[COMPLETE] Frontend: Response text (not JSON):', text);
+          errorMessage = text || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
       
+      const data = await response.json();
+      console.log('[COMPLETE] Frontend: Success:', data);
       await fetchTodos(); // Refresh list
       return true;
     } catch (err) {
+      console.error('[COMPLETE] Frontend: Error:', err);
       setError(err.message);
-      console.error('Error completing todo:', err);
       return false;
     }
   }, [fetchTodos]);
