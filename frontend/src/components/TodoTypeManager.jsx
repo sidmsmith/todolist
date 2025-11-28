@@ -129,10 +129,10 @@ export const TodoTypeManager = ({ isOpen, onClose }) => {
                       <td>{type.priority}</td>
                       <td>{type.completionMethod}</td>
                       <td>
-                        <button onClick={() => handleEdit(type)} className="btn btn-sm btn-primary">
+                        <button onClick={() => handleEdit(type)} className="btn btn-sm todo-type-btn-primary">
                           Edit
                         </button>
-                        <button onClick={() => handleDelete(type.id)} className="btn btn-sm btn-danger" style={{ marginLeft: '8px' }}>
+                        <button onClick={() => handleDelete(type.id)} className="btn btn-sm todo-type-btn-primary" style={{ marginLeft: '8px' }}>
                           Delete
                         </button>
                       </td>
