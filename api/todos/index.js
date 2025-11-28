@@ -43,35 +43,31 @@ app.use((req, res, next) => {
   const originalUrl = req.url || '';
   const originalPath = req.path || '';
   
-  console.log('[API/TODOS] Path rewrite middleware - Original URL:', originalUrl, 'Path:', originalPath);
+  console.log('[API/TODOS] Path rewrite middleware - Original URL:', originalUrl, 'Path:', originalPath, 'Method:', req.method);
   
-  // If the path or URL starts with /api/todos, strip it
-  if ((req.path && req.path.startsWith('/api/todos')) || (req.url && req.url.startsWith('/api/todos'))) {
-    // Extract query string if present
-    const urlWithoutQuery = originalUrl.includes('?') ? originalUrl.substring(0, originalUrl.indexOf('?')) : originalUrl;
-    const queryString = originalUrl.includes('?') ? originalUrl.substring(originalUrl.indexOf('?')) : '';
-    
-    // Remove /api/todos from the path (handles both /api/todos and /api/todos/:id/...)
-    let newPath = originalPath ? originalPath.replace(/^\/api\/todos/, '') : urlWithoutQuery.replace(/^\/api\/todos/, '');
-    if (!newPath || newPath === '') {
-      newPath = '/';
-    }
-    
-    // Construct new URL with path and query string
-    const newUrl = newPath + queryString;
-    
-    req.url = newUrl;
-    // Manually set path since Express might not recalculate it correctly
-    Object.defineProperty(req, 'path', {
-      value: newPath,
-      writable: true,
-      configurable: true
-    });
-    
-    console.log('[API/TODOS] Rewritten path:', req.method, 'Original:', originalPath, 'New:', newPath, 'URL:', newUrl);
-  } else {
-    console.log('[API/TODOS] Path does not start with /api/todos, skipping rewrite');
+  // Always strip /api/todos since this function only handles /api/todos routes
+  // Extract query string if present
+  const urlWithoutQuery = originalUrl.includes('?') ? originalUrl.substring(0, originalUrl.indexOf('?')) : originalUrl;
+  const queryString = originalUrl.includes('?') ? originalUrl.substring(originalUrl.indexOf('?')) : '';
+  
+  // Remove /api/todos from the path (handles both /api/todos and /api/todos/:id/...)
+  let newPath = originalPath ? originalPath.replace(/^\/api\/todos/, '') : urlWithoutQuery.replace(/^\/api\/todos/, '');
+  if (!newPath || newPath === '') {
+    newPath = '/';
   }
+  
+  // Construct new URL with path and query string
+  const newUrl = newPath + queryString;
+  
+  req.url = newUrl;
+  // Manually set path since Express might not recalculate it correctly
+  Object.defineProperty(req, 'path', {
+    value: newPath,
+    writable: true,
+    configurable: true
+  });
+  
+  console.log('[API/TODOS] Rewritten path:', req.method, 'Original:', originalPath, 'New:', newPath, 'URL:', newUrl);
   next();
 });
 

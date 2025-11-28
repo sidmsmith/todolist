@@ -92,13 +92,20 @@ export const useTodoList = () => {
       if (!response.ok) {
         let errorMessage = `Failed to complete todo: ${response.status} ${response.statusText}`;
         try {
-          const errorData = await response.json();
-          console.log('[COMPLETE] Frontend: Error data:', errorData);
-          errorMessage = errorData.error || errorMessage;
+          // Clone response to read it multiple times if needed
+          const clonedResponse = response.clone();
+          const errorData = await clonedResponse.json().catch(() => null);
+          if (errorData) {
+            console.log('[COMPLETE] Frontend: Error data:', errorData);
+            errorMessage = errorData.error || errorMessage;
+          } else {
+            const text = await response.text();
+            console.log('[COMPLETE] Frontend: Response text (not JSON):', text);
+            errorMessage = text || errorMessage;
+          }
         } catch (parseError) {
-          const text = await response.text();
-          console.log('[COMPLETE] Frontend: Response text (not JSON):', text);
-          errorMessage = text || errorMessage;
+          console.log('[COMPLETE] Frontend: Parse error:', parseError);
+          errorMessage = `Failed to complete todo: ${response.status} ${response.statusText}`;
         }
         throw new Error(errorMessage);
       }
@@ -166,13 +173,20 @@ export const useTodoList = () => {
       if (!response.ok) {
         let errorMessage = `Failed to dismiss todo: ${response.status} ${response.statusText}`;
         try {
-          const errorData = await response.json();
-          console.log('[DISMISS] Frontend: Error data:', errorData);
-          errorMessage = errorData.error || errorMessage;
+          // Clone response to read it multiple times if needed
+          const clonedResponse = response.clone();
+          const errorData = await clonedResponse.json().catch(() => null);
+          if (errorData) {
+            console.log('[DISMISS] Frontend: Error data:', errorData);
+            errorMessage = errorData.error || errorMessage;
+          } else {
+            const text = await response.text();
+            console.log('[DISMISS] Frontend: Response text (not JSON):', text);
+            errorMessage = text || errorMessage;
+          }
         } catch (parseError) {
-          const text = await response.text();
-          console.log('[DISMISS] Frontend: Response text (not JSON):', text);
-          errorMessage = text || errorMessage;
+          console.log('[DISMISS] Frontend: Parse error:', parseError);
+          errorMessage = `Failed to dismiss todo: ${response.status} ${response.statusText}`;
         }
         throw new Error(errorMessage);
       }
