@@ -34,11 +34,22 @@ app.use(express.json());
 
 // Log all requests
 app.use((req, res, next) => {
-  console.log('[API/TODOS] Request received:', req.method, req.url, req.path);
+  console.log('[API/TODOS] Request received:', req.method, req.url, req.path, 'Original path:', req.originalUrl);
   next();
 });
 
-// Mount the todos router at root since Vercel already routes /api/todos to this function
+// Strip /api/todos prefix from the path so the router sees paths like /, /:id, etc.
+app.use((req, res, next) => {
+  // If the path starts with /api/todos, strip it
+  if (req.path.startsWith('/api/todos')) {
+    req.url = req.url.replace('/api/todos', '') || '/';
+    req.path = req.path.replace('/api/todos', '') || '/';
+    console.log('[API/TODOS] Rewritten path:', req.method, req.url, req.path);
+  }
+  next();
+});
+
+// Mount the todos router at root since we've stripped the /api/todos prefix
 // The router internally handles paths like /, /:id, /:id/complete, etc.
 app.use('/', todoRoutes);
 

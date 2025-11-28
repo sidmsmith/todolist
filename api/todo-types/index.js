@@ -34,11 +34,22 @@ app.use(express.json());
 
 // Log all requests
 app.use((req, res, next) => {
-  console.log('[API/TODO-TYPES] Request received:', req.method, req.url, req.path);
+  console.log('[API/TODO-TYPES] Request received:', req.method, req.url, req.path, 'Original path:', req.originalUrl);
   next();
 });
 
-// Mount the todo-types router at root since Vercel already routes /api/todo-types to this function
+// Strip /api/todo-types prefix from the path so the router sees paths like /, /:id, etc.
+app.use((req, res, next) => {
+  // If the path starts with /api/todo-types, strip it
+  if (req.path.startsWith('/api/todo-types')) {
+    req.url = req.url.replace('/api/todo-types', '') || '/';
+    req.path = req.path.replace('/api/todo-types', '') || '/';
+    console.log('[API/TODO-TYPES] Rewritten path:', req.method, req.url, req.path);
+  }
+  next();
+});
+
+// Mount the todo-types router at root since we've stripped the /api/todo-types prefix
 // The router internally handles paths like /, /:id, etc.
 app.use('/', todoTypeRoutes);
 
