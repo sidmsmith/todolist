@@ -12,10 +12,17 @@
     "preview": "npm run build && npm start",
     "reset": "cd backend && node reset-data.js"
   },
-  "keywords": ["wms", "todolist", "supervisor", "react", "express"],
+  "keywords": [
+    "wms",
+    "todolist",
+    "supervisor",
+    "react",
+    "express"
+  ],
   "author": "sidmsmith",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "node-fetch": "^2.7.0"
   },
