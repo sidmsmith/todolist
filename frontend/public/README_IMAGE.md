@@ -10,3 +10,8 @@ The image should show the ILPNS WMS interface.
 
 **Alternative:** You can also place it in `frontend/src/assets/` and import it in the component.
 
+
+
+
+
+

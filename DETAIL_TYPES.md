@@ -108,3 +108,8 @@ This document lists all supported detail types that can be displayed in todo car
 
 Details are rendered in the `TodoCard` component within the `todo-details` div. Each detail type is conditionally rendered based on its presence in the `todo.details` object.
 
+
+
+
+
+

@@ -146,7 +146,8 @@ function App() {
               borderRadius: '8px',
               cursor: 'pointer',
               fontSize: '14px',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              display: 'none'
             }}
           >
             View To Dos
@@ -168,7 +169,8 @@ function App() {
               borderRadius: '8px',
               cursor: 'pointer',
               fontSize: '14px',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              display: 'none'
             }}
           >
             Manage Todo Types
