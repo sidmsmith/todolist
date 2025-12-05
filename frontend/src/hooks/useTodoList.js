@@ -76,6 +76,15 @@ export const useTodoList = () => {
 
   // Complete a todo
   const completeTodo = useCallback(async (todoId, completionData = null) => {
+    // Track complete attempt in Statsig
+    if (window.StatsigTracking && window.StatsigTracking.isInitialized()) {
+      window.StatsigTracking.logEvent('complete_todo_attempt', {
+        todo_id: todoId,
+        user_id: getUserId(),
+        timestamp: new Date().toISOString()
+      });
+    }
+    
     try {
       const userId = getUserId();
       const url = `${API_BASE}/todos/${todoId}/complete`;
@@ -107,11 +116,32 @@ export const useTodoList = () => {
           console.log('[COMPLETE] Frontend: Parse error:', parseError);
           errorMessage = `Failed to complete todo: ${response.status} ${response.statusText}`;
         }
+        
+        // Track complete failure in Statsig
+        if (window.StatsigTracking && window.StatsigTracking.isInitialized()) {
+          window.StatsigTracking.logEvent('complete_todo_failed', {
+            todo_id: todoId,
+            user_id: userId,
+            error: errorMessage,
+            timestamp: new Date().toISOString()
+          });
+        }
+        
         throw new Error(errorMessage);
       }
       
       const data = await response.json();
       console.log('[COMPLETE] Frontend: Success:', data);
+      
+      // Track complete success in Statsig
+      if (window.StatsigTracking && window.StatsigTracking.isInitialized()) {
+        window.StatsigTracking.logEvent('complete_todo_completed', {
+          todo_id: todoId,
+          user_id: userId,
+          timestamp: new Date().toISOString()
+        });
+      }
+      
       await fetchTodos(); // Refresh list
       return true;
     } catch (err) {
@@ -123,6 +153,16 @@ export const useTodoList = () => {
 
   // Snooze a todo (minutes = 0 means unsnooze)
   const snoozeTodo = useCallback(async (todoId, minutes) => {
+    // Track snooze attempt in Statsig
+    if (window.StatsigTracking && window.StatsigTracking.isInitialized()) {
+      window.StatsigTracking.logEvent('snooze_todo_attempt', {
+        todo_id: todoId,
+        user_id: getUserId(),
+        minutes: String(minutes),
+        timestamp: new Date().toISOString()
+      });
+    }
+    
     try {
       const userId = getUserId();
       const response = await fetch(`${API_BASE}/todos/${todoId}/snooze`, {
@@ -133,7 +173,30 @@ export const useTodoList = () => {
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(errorData.error || `Failed to snooze todo: ${response.status} ${response.statusText}`);
+        const errorMessage = errorData.error || `Failed to snooze todo: ${response.status} ${response.statusText}`;
+        
+        // Track snooze failure in Statsig
+        if (window.StatsigTracking && window.StatsigTracking.isInitialized()) {
+          window.StatsigTracking.logEvent('snooze_todo_failed', {
+            todo_id: todoId,
+            user_id: userId,
+            minutes: String(minutes),
+            error: errorMessage,
+            timestamp: new Date().toISOString()
+          });
+        }
+        
+        throw new Error(errorMessage);
+      }
+      
+      // Track snooze success in Statsig
+      if (window.StatsigTracking && window.StatsigTracking.isInitialized()) {
+        window.StatsigTracking.logEvent('snooze_todo_completed', {
+          todo_id: todoId,
+          user_id: userId,
+          minutes: String(minutes),
+          timestamp: new Date().toISOString()
+        });
       }
       
       await fetchTodos(); // Refresh list
@@ -157,6 +220,16 @@ export const useTodoList = () => {
 
   // Dismiss a todo
   const dismissTodo = useCallback(async (todoId, dismissalReason = null) => {
+    // Track dismiss attempt in Statsig
+    if (window.StatsigTracking && window.StatsigTracking.isInitialized()) {
+      window.StatsigTracking.logEvent('dismiss_todo_attempt', {
+        todo_id: todoId,
+        user_id: getUserId(),
+        dismissal_reason: dismissalReason || 'none',
+        timestamp: new Date().toISOString()
+      });
+    }
+    
     try {
       const userId = getUserId();
       const url = `${API_BASE}/todos/${todoId}/dismiss`;
@@ -188,11 +261,34 @@ export const useTodoList = () => {
           console.log('[DISMISS] Frontend: Parse error:', parseError);
           errorMessage = `Failed to dismiss todo: ${response.status} ${response.statusText}`;
         }
+        
+        // Track dismiss failure in Statsig
+        if (window.StatsigTracking && window.StatsigTracking.isInitialized()) {
+          window.StatsigTracking.logEvent('dismiss_todo_failed', {
+            todo_id: todoId,
+            user_id: userId,
+            dismissal_reason: dismissalReason || 'none',
+            error: errorMessage,
+            timestamp: new Date().toISOString()
+          });
+        }
+        
         throw new Error(errorMessage);
       }
       
       const data = await response.json();
       console.log('[DISMISS] Frontend: Success:', data);
+      
+      // Track dismiss success in Statsig
+      if (window.StatsigTracking && window.StatsigTracking.isInitialized()) {
+        window.StatsigTracking.logEvent('dismiss_todo_completed', {
+          todo_id: todoId,
+          user_id: userId,
+          dismissal_reason: dismissalReason || 'none',
+          timestamp: new Date().toISOString()
+        });
+      }
+      
       await fetchTodos(); // Refresh list
       return true;
     } catch (err) {
