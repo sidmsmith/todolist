@@ -19,18 +19,6 @@
       "destination": "/api/reset"
     },
     {
-      "source": "/api/statsig-config",
-      "destination": "/api/index.py"
-    },
-    {
-      "source": "/statsig.js",
-      "destination": "/api/index.py"
-    },
-    {
-      "source": "/statsig-js-client.min.js",
-      "destination": "/api/index.py"
-    },
-    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

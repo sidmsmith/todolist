@@ -58,7 +58,7 @@ API_KEY_CLOUD = os.getenv("CLOUDINARY_API_KEY", "")
 API_SECRET_CLOUD = os.getenv("CLOUDINARY_API_SECRET", "")
 
 # --- Home Assistant Webhook Configuration ---
-HA_WEBHOOK_URL = "http://sidmsmith.zapto.org:8123/api/webhook/manhattan_pos_items"
+HA_WEBHOOK_URL = os.getenv("HA_WEBHOOK_URL", "http://sidmsmith.zapto.org:8123/api/webhook/manhattan_app_usage")
 
 # --- Default Values (matching Python script) ---
 DEFAULT_COMPANY = "Nike"
@@ -1498,33 +1498,36 @@ def update_wm():
         log_to_console(f"WM Update failed: {str(e)}", "[ERROR]")
         return jsonify({"success": False, "error": str(e)})
 
-@app.route('/api/statsig-config', methods=['GET'])
-def statsig_config():
-    """Provide Statsig Client SDK Key to client-side code"""
-    client_key = os.getenv('STATSIG_CLIENT_KEY')
-    if client_key:
-        return jsonify({"key": client_key})
-    else:
-        return jsonify({
-            "error": "STATSIG_CLIENT_KEY not configured",
-            "note": "Please set STATSIG_CLIENT_KEY environment variable in Vercel project settings. The key should start with 'client-'"
-        }), 200  # Return 200 so client can handle gracefully
+# Home Assistant Configuration
+HA_WEBHOOK_URL = os.getenv("HA_WEBHOOK_URL", "http://sidmsmith.zapto.org:8123/api/webhook/manhattan_app_usage")
+HA_HEADERS = {"Content-Type": "application/json"}
+APP_NAME = "todolist"
+APP_VERSION = "0.1.0"
 
-@app.route('/statsig-js-client.min.js', methods=['GET'])
-def serve_statsig_sdk():
-    """Serve Statsig SDK JavaScript file"""
-    sdk_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'frontend', 'public', 'statsig-js-client.min.js')
-    if os.path.exists(sdk_path):
-        return send_from_directory(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'frontend', 'public'), 'statsig-js-client.min.js', mimetype='application/javascript')
-    return jsonify({'error': 'SDK file not found'}), 404
+def send_ha_message(event_name, metadata={}):
+    """Send event to Home Assistant webhook"""
+    from datetime import datetime
+    payload = {
+        "event_name": event_name,
+        "app_name": APP_NAME,
+        "app_version": APP_VERSION,
+        "timestamp": datetime.utcnow().isoformat(),
+        **metadata
+    }
+    try:
+        import requests
+        requests.post(HA_WEBHOOK_URL, json=payload, headers=HA_HEADERS, timeout=5)
+    except:
+        pass
 
-@app.route('/statsig.js', methods=['GET'])
-def serve_statsig_js():
-    """Serve Statsig integration JavaScript file"""
-    statsig_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'frontend', 'public', 'statsig.js')
-    if os.path.exists(statsig_path):
-        return send_from_directory(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'frontend', 'public'), 'statsig.js', mimetype='application/javascript')
-    return jsonify({'error': 'Statsig script not found'}), 404
+@app.route('/api/ha-track', methods=['POST'])
+def ha_track():
+    """Receive events from frontend and forward to HA webhook"""
+    data = request.json
+    event_name = data.get('event_name')
+    metadata = data.get('metadata', {})
+    send_ha_message(event_name, metadata)
+    return jsonify({"success": True})
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -6,6 +6,7 @@ import { TodoSheet } from './components/TodoSheet';
 import { ILPNScreen } from './components/ILPNScreen';
 import { TodoTypeManager } from './components/TodoTypeManager';
 import { MenuOverlay } from './components/MenuOverlay';
+import { trackEvent } from './utils/tracking';
 import './styles/globals.css';
 
 function App() {
