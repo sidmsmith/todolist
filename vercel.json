@@ -19,6 +19,10 @@
       "destination": "/api/reset"
     },
     {
+      "source": "/api/ha-track",
+      "destination": "/api/index.py"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
