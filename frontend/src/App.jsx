@@ -30,8 +30,11 @@ function App() {
     toggleShowSnoozed
   } = useTodoList();
 
-  // Handle window resize
+  // Handle window resize and track app opened
   useEffect(() => {
+    // Track app opened
+    trackEvent('app_opened', {});
+    
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
