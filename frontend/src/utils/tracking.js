@@ -1,4 +1,4 @@
-// Home Assistant tracking utility for React
+// Usage tracking utility for React (dashboard ingest → Neon)
 
 // ===== GENERIC METADATA COLLECTION =====
 function getCommonMetadata(additionalMetadata = {}) {
@@ -114,10 +114,9 @@ function getSessionId() {
   return window._sessionId;
 }
 
-// Home Assistant tracking helper
 export async function trackEvent(eventName, metadata = {}) {
   try {
-    await fetch('/api/ha-track', {
+    await fetch('/api/usage-track', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -134,4 +133,16 @@ export async function trackEvent(eventName, metadata = {}) {
 if (typeof window !== 'undefined') {
   window._pageLoadTime = Date.now();
 }
+
+
+
+
+
+
+
+
+
+
+
+
 

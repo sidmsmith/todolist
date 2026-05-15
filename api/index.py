@@ -57,8 +57,35 @@ CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME", "com-manh-cp")
 API_KEY_CLOUD = os.getenv("CLOUDINARY_API_KEY", "")
 API_SECRET_CLOUD = os.getenv("CLOUDINARY_API_SECRET", "")
 
-# --- Home Assistant Webhook Configuration ---
-HA_WEBHOOK_URL = os.getenv("HA_WEBHOOK_URL", "http://sidmsmith.zapto.org:8123/api/webhook/manhattan_app_usage")
+# --- Usage tracking (Neon via dashboard ingest) ---
+USAGE_INGEST_URL = os.getenv("MANHATTAN_USAGE_INGEST_URL", "").strip()
+USAGE_INGEST_SECRET = os.getenv("MANHATTAN_USAGE_INGEST_SECRET", "").strip()
+APP_NAME = "todolist"
+APP_VERSION = "0.1.1"
+
+def forward_usage_event(payload):
+    """POST usage JSON to Manhattan app usage dashboard ingest (Neon)."""
+    if not USAGE_INGEST_URL:
+        print("[usage] MANHATTAN_USAGE_INGEST_URL not set; event not recorded")
+        return
+    headers = {"Content-Type": "application/json"}
+    if USAGE_INGEST_SECRET:
+        headers["Authorization"] = f"Bearer {USAGE_INGEST_SECRET}"
+    try:
+        requests.post(USAGE_INGEST_URL, json=payload, headers=headers, timeout=8)
+    except Exception as e:
+        print(f"[usage] Forward failed: {e}")
+
+def emit_usage_event(event_name, metadata=None):
+    metadata = metadata or {}
+    payload = {
+        "event_name": event_name,
+        "app_name": APP_NAME,
+        "app_version": APP_VERSION,
+        "timestamp": datetime.utcnow().isoformat(),
+        **metadata,
+    }
+    forward_usage_event(payload)
 
 # --- Default Values (matching Python script) ---
 DEFAULT_COMPANY = "Nike"
@@ -390,16 +417,16 @@ def create_placeholder_variant(item_id, url_type="URL1"):
 
 @app.route('/api/app_opened', methods=['POST'])
 def app_opened():
-    """Track app opened event"""
-    try:
-        payload = {
-            "event": "app_opened",
-            "version": "v0.0.5",
-            "timestamp": datetime.now().isoformat()
-        }
-        requests.post(HA_WEBHOOK_URL, json=payload, timeout=5)
-    except:
-        pass
+    """Track app opened event (legacy server route; client also sends app_opened via usage-track)."""
+    emit_usage_event("app_opened", request.json or {})
+    return jsonify({"success": True})
+
+@app.route('/api/ha-track', methods=['POST'])
+@app.route('/api/usage-track', methods=['POST'])
+def usage_track():
+    """Receive events from frontend and forward to dashboard ingest (Neon)."""
+    data = request.json or {}
+    emit_usage_event(data.get('event_name'), data.get('metadata', {}))
     return jsonify({"success": True})
 
 @app.route('/api/auth', methods=['POST'])
@@ -1497,37 +1524,6 @@ def update_wm():
     except Exception as e:
         log_to_console(f"WM Update failed: {str(e)}", "[ERROR]")
         return jsonify({"success": False, "error": str(e)})
-
-# Home Assistant Configuration
-HA_WEBHOOK_URL = os.getenv("HA_WEBHOOK_URL", "http://sidmsmith.zapto.org:8123/api/webhook/manhattan_app_usage")
-HA_HEADERS = {"Content-Type": "application/json"}
-APP_NAME = "todolist"
-APP_VERSION = "0.1.0"
-
-def send_ha_message(event_name, metadata={}):
-    """Send event to Home Assistant webhook"""
-    from datetime import datetime
-    payload = {
-        "event_name": event_name,
-        "app_name": APP_NAME,
-        "app_version": APP_VERSION,
-        "timestamp": datetime.utcnow().isoformat(),
-        **metadata
-    }
-    try:
-        import requests
-        requests.post(HA_WEBHOOK_URL, json=payload, headers=HA_HEADERS, timeout=5)
-    except:
-        pass
-
-@app.route('/api/ha-track', methods=['POST'])
-def ha_track():
-    """Receive events from frontend and forward to HA webhook"""
-    data = request.json
-    event_name = data.get('event_name')
-    metadata = data.get('metadata', {})
-    send_ha_message(event_name, metadata)
-    return jsonify({"success": True})
 
 if __name__ == '__main__':
     app.run(debug=True)
