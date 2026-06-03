@@ -77,7 +77,7 @@ curl http://localhost:5000/api/todos | jq '.data | length'
 ### Where Data is Stored
 
 - **Active Data**: `backend/src/data/todo.json` (gets modified when you interact)
-- **Seed Data (Defaults)**: `backend/src/data/seeds/todo.json` (never modified)
+- **Seed Data (Defaults)**: `backend/src/data/seeds/todo.json` (never modified; use `npm run reset` to copy into production)
 - **Todo Types**: `backend/src/data/todotype.json` (rarely changes)
 
 ### What Happens When You Interact

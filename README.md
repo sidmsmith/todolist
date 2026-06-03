@@ -20,7 +20,7 @@ todolist/
 │   │   ├── data/
 │   │   └── utils/
 │   └── package.json
-├── samples/           # Original design files and starter code
+├── samples/           # Design spec and archived frontend reference (no sample data)
 ├── server.js          # Root server for production
 └── package.json       # Root package.json with scripts
 ```
